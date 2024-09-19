@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="form-container">
+        <h2>Register</h2>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <!-- Username -->
+            <input type="text" name="username" placeholder="Username" required>
+            
+            <!-- Email -->
+            <input type="email" name="email" placeholder="Email" required>
+            
+            <!-- Password -->
+            <input type="password" name="password" placeholder="Password" required>
+            
+            <!-- Compact Row: Age and Phone number -->
+            <div class="compact-row">
+                <input type="number" name="age" placeholder="Age" required>
+                <input type="tel" name="phone" placeholder="Phone Number" required>
+            </div>
+
+            <!-- Gender -->
+            <select name="gender" required>
+                <option value="" disabled selected>Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <!-- Address -->
+            <textarea name="address" placeholder="Address" required></textarea>
+
+            <!-- Submit button -->
+            <input type="submit" value="Register">
+        </form>
+
+        <!-- Add a link to navigate to the Login page -->
+        <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome to the Swimming Pool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <div class="nav-right">
+            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('register') }}">Register</a>
+        </div>
+    </div>
+
+    <!-- Content Section -->
+    <div class="content">
+        <h1>Welcome to the Swimming Pool!</h1>
+        <p>
+            Our swimming pool is a great place to unwind and get a full-body workout. Whether you're a beginner or an experienced swimmer, 
+            we have something for everyone. Enjoy our well-maintained, heated pool, and take advantage of our swimming lessons and aquatic fitness classes.
+        </p>
+        <p>
+            Swimming is not only a fun activity but also an excellent way to stay fit. It helps in building endurance, muscle strength, and cardiovascular fitness. 
+            Join us for a refreshing and invigorating swim!
+        </p>
+        <!-- Quotes Section -->
+        <div class="quotes">
+            <blockquote>
+                "The water is your friend. You don’t have to fight with water, just share the same spirit as the water, and it will help you move."
+                <footer>— Aleksandr Popov</footer>
+            </blockquote>
+            <blockquote>
+                "Swim to be fit, swim to be happy."
+                <footer>— Anonymous</footer>
+            </blockquote>
+        </div>
+    </div>
+</body>
+</html>

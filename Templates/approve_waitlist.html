@@ -1,0 +1,59 @@
+{% extends "base.html" %} 
+{% block content %}
+
+<body class="bg-gray-100 font-sans overflow-x-hidden">
+  <div class="flex h-screen bg-gray-100">
+    <!-- Sidebar -->
+    <!-- Add your sidebar code here -->
+
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <main class="flex-1 overflow-hidden bg-gray-200">
+        <div class="container mx-auto px-6 py-8">
+          <h3 class="text-gray-800 text-3xl font-semibold mb-6">
+            Approval Wait List
+          </h3>
+
+          <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-100">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Request ID</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Employee Name</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Department</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Request Date</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <!-- Repeat this block for each item in the wait list -->
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">12345</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">John Doe</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">IT Department</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2024-09-15</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Pending</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex space-x-2">
+                    <a href="#" class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                      View
+                    </a>
+                    <a href="#" class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                      Approve
+                    </a>
+                    <a href="#" class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-red-600 hover:bg-red-700">
+                      Reject
+                    </a>
+                  </td>
+                </tr>
+                <!-- End of repeat block -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+
+{% endblock %}

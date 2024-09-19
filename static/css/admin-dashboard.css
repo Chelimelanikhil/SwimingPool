@@ -1,0 +1,72 @@
+/* General reset */
+
+body, h1, ul, li, a {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+}
+
+/* Sidebar styles */
+.sidebar {
+    width: 240px;
+    background-color: #f1f1f1;
+    padding: 20px;
+    position: fixed;
+    top: 0;
+    height: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Ensures the logout stays at the bottom */
+}
+
+.sidebar ul {
+    margin-top: 20px;
+}
+
+.sidebar li {
+    margin-bottom: 10px;
+}
+
+.sidebar a {
+    color: #333;
+    padding: 10px;
+    display: block;
+    border-radius: 5px;
+}
+
+.sidebar a.active, .sidebar a:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Sidebar Bottom - Logout */
+.sidebar-bottom {
+    margin-top: auto;
+    padding-top: 20px;
+}
+
+.sidebar-bottom a {
+    color: #333;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.sidebar-bottom a:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.sidebar-bottom i {
+    margin-right: 8px;
+}
+
+/* Content area */
+.content {
+    margin-left: 220px;
+    background-color: #fff;
+    min-height: 100vh;
+}

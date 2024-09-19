@@ -1,0 +1,123 @@
+/* Base Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f4f4f4;
+}
+
+.dashboard-container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.header h1 {
+    margin: 0;
+}
+
+.logout-button {
+    padding: 10px 15px;
+    background: #dc3545;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.logout-button:hover {
+    background: #c82333;
+}
+
+/* Tabs Navigation */
+.tabs {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    background: #f8f9fa;
+    border-radius: 4px 4px 0 0;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.3s;
+}
+
+.tab-button.active {
+    background: #fff;
+    border-bottom: 1px solid #fff;
+}
+
+.tab-button:hover {
+    background: #e2e6ea;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Form Styles */
+.registration-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.registration-form label {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.registration-form select, .registration-form input, .registration-form button {
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.submit-button {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+.submit-button:hover {
+    background: #0056b3;
+}
+
+/* Registered Classes */
+.registered-classes {
+    list-style-type: none;
+    padding: 0;
+}
+
+.registered-classes li {
+    background: #e9ecef;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 4px;
+}
+
+/* Hidden Class */
+.hidden {
+    display: none;
+}

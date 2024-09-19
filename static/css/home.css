@@ -1,0 +1,84 @@
+/* Set background image for the whole page */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: url('../images/swimming-pool-bg.jpeg') no-repeat center center fixed;
+    background-size: cover;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
+/* Navigation Bar Styling */
+.navbar {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.6); /* Dark overlay for better text visibility */
+    padding: 15px 30px; /* Increased padding for a taller navbar */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
+    display: flex; /* Use Flexbox to align items */
+    justify-content: flex-end; /* Align items to the right */
+    box-sizing: border-box; /* Ensure padding is included in the width */
+}
+
+.nav-right {
+    display: flex;
+    align-items: center; /* Center items vertically */
+}
+
+.nav-right a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 16px;
+}
+
+.nav-right a:hover {
+    text-decoration: underline;
+}
+
+
+.nav-right a:hover {
+    text-decoration: underline;
+}
+
+/* Content Section Styling */
+.content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.8); /* Slight white background for better text readability */
+    padding: 30px;
+    border-radius: 8px;
+    max-width: 600px;
+    text-align: center;
+}
+
+.content h1 {
+    margin-top: 0;
+    color: #333;
+}
+
+.content p {
+    color: #555;
+    line-height: 1.6;
+}
+
+/* Quotes Section Styling */
+.quotes {
+    margin-top: 20px;
+}
+
+blockquote {
+    border-left: 4px solid #4CAF50; /* Green border for emphasis */
+    padding-left: 20px;
+    margin: 20px 0;
+    font-style: italic;
+    color: #333;
+}
+
+blockquote footer {
+    font-size: 14px;
+    color: #777;
+}
