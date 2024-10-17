@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user_dashboard.css') }}" />
+   
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="top-bar">
+    <div class="container">
+        <div class="left">
+            <img src="https://cdn4.iconfinder.com/data/icons/social-media-logos-6/512/112-gmail_email_mail-512.png" alt="Email Icon">
+            <a href="mailto:info.poolmanagement@gmail.com">info.poolmanagement@gmail.com</a>
+        </div>
+        <div class="right">
+            <a href="#">Calendar</a>
+            <a href="#">View Address</a>
+        </div>
+    </div>
+</div>
+
+    <div class="min-h-screen dashboard-container">
+     
+     
+
+      <div class="container mx-auto px-4 py-8">
+      
+
+        <!-- Tab Content -->
+        <div id="register" class="tab-content">
+            <h2 class="text-2xl font-bold mb-6">Register for Swimming Classes</h2>
+            <form class="space-y-6 max-w-lg" action="{{ url_for('date_selection') }}" method="POST">
+                <div>
+                    <label for="register_for" class="block text-sm font-medium text-gray-700">Register for:</label>
+                    <select id="register_for" name="register_for" onchange="showOptions(this.value); updateFee();" class="form-select mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                        <option value="Select">Select</option>
+                        <option value="children">Children</option>
+                        <option value="adult">Adult</option>
+                    </select>
+                </div>
+
+                <div id="age_group_container" class="hidden space-y-6">
+                    <div id="child_age_group" class="space-y-6">
+                        <div>
+                            <label for="age_group" class="block text-sm font-medium text-gray-700">Select Age Group:</label>
+                            <select id="age_group" name="age_group" onchange="showLevels(this.value); updateFee();" class="form-select mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                                <option value="select">select</option>
+                                <option value="1-5">1-5</option>
+                                <option value="6-20">6-20</option>
+                            </select>
+                        </div>
+
+                        <div id="level_container" class="hidden">
+                            <label for="level" class="block text-sm font-medium text-gray-700">Select Level:</label>
+                            <select id="level" name="level" class="form-select mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                                <!-- Options will be added based on age group -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="adult_level_container" class="hidden space-y-6">
+                        <div>
+                            <label for="adult_level" class="block text-sm font-medium text-gray-700">Select Level:</label>
+                            <select id="adult_level" name="adult_level" onchange="updateFee();" class="form-select mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                                <option value="select">Select</option>
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="class_type" class="block text-sm font-medium text-gray-700">Class Type:</label>
+                    <select id="class_type" name="class_type" onchange="updateFee();" class="form-select mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                        <option value="select">Select</option>
+                        <option value="private">Private</option>
+                        <option value="group">Group</option>
+                    </select>
+                </div>
+
+              
+              
+                <div>
+                    <button type="submit" class="submit-button w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Book Slot
+                    </button>
+                </div>
+            </form>
+        </div>
+
+       
+    </div>
+
+    <script>
+    
+
+      function showOptions(value) {
+        const ageGroupContainer = document.getElementById("age_group_container");
+        const childAgeGroup = document.getElementById("child_age_group");
+        const adultLevelContainer = document.getElementById("adult_level_container");
+
+        if (value === "children") {
+          ageGroupContainer.classList.remove("hidden");
+          childAgeGroup.classList.remove("hidden");
+          adultLevelContainer.classList.add("hidden");
+        } else if (value === "adult") {
+          ageGroupContainer.classList.remove("hidden");
+          childAgeGroup.classList.add("hidden");
+          adultLevelContainer.classList.remove("hidden");
+        } else {
+          ageGroupContainer.classList.add("hidden");
+        }
+      }
+
+      function showLevels(value) {
+        const levelContainer = document.getElementById("level_container");
+        const levelSelect = document.getElementById("level");
+        levelSelect.innerHTML = ""; // Clear previous options
+        if (value === "1-5") {
+          levelSelect.innerHTML =
+            '<option value="1-3">1-3 (Parent Observation Needed)</option><option value="4-5">4-5 (Beginner)</option>';
+          levelContainer.classList.remove("hidden");
+        } else if (value === "6-20") {
+          levelSelect.innerHTML =
+            '<option value="6-13">6-13 (Level 1)</option><option value="14-20">14-20 (Level 2)</option>';
+          levelContainer.classList.remove("hidden");
+        } else {
+          levelContainer.classList.add("hidden");
+        }
+      }
+
+    </script>
+</body>
+</html>

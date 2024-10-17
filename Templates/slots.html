@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Multi-Select Calendar with Single Time Slot</title>
+    <style>
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
+        .day {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+            cursor: pointer;
+            background-color: #f0f0f0;
+        }
+
+        .day.selected {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .day.disabled {
+            background-color: #e0e0e0;
+            color: #999;
+            cursor: not-allowed;
+        }
+
+        .day.booked {
+            background-color: #ff4d4d;
+            color: white;
+            cursor: not-allowed;
+        }
+
+        .day-header {
+            font-weight: bold;
+            background-color: #eee;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .month-title {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .selected-dates {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+
+        .navigation button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .navigation button:hover {
+            background-color: #0056b3;
+        }
+
+        .navigation button:disabled {
+            background-color: #e0e0e0;
+            cursor: not-allowed;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 400px;
+            text-align: center;
+        }
+
+        .time-slot {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            background-color: #f0f0f0;
+        }
+
+        .time-slot.selected {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .confirm-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .confirm-btn:hover {
+            background-color: #218838;
+        }
+        .total-fee {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            display: none; /* Initially hide the total fee section */
+        }
+        /* Top bar styles */
+.top-bar {
+    background-color: var(--primary-color);
+    padding: 10px 0;
+    font-size: 14px;
+}
+
+.top-bar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.top-bar a {
+    color: white;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+}
+
+
+:root {
+    --primary-color: #0077be;
+    --secondary-color: #00a8e8;
+    --accent-color: #f9a825;
+    --text-color: #333;
+    --light-bg: #f4f4f4;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.top-bar img {
+    height: 16px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+.right {
+    display: flex;
+    gap: 15px; /* Add gap between items */
+}
+
+.right a {
+    text-decoration: none;
+    color: white;
+}
+.right a:hover {
+    text-decoration: underline;
+}
+
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="container">
+            <div class="left">
+                <img src="https://cdn4.iconfinder.com/data/icons/social-media-logos-6/512/112-gmail_email_mail-512.png" alt="Email Icon">
+                <a href="mailto:info.poolmanagement@gmail.com">info.poolmanagement@gmail.com</a>
+            </div>
+            <div class="right">
+                <a href="#">Calendar</a>
+                <a href="#">View Address</a>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        
+    
+        <div class="navigation">
+            <button id="prevMonth">Previous</button>
+            <h2 class="month-title" id="monthTitle"></h2>
+            <button id="nextMonth">Next</button>
+        </div>
+        <div class="calendar" id="calendar"></div>
+        <div class="selected-dates" id="selectedDates">
+            <strong>Selected Dates:</strong>
+            <span id="dates"></span><br>
+            <button id="proceedBtn" class="confirm-btn" style="display: none;">Proceed to Select Time Slot</button>
+        </div>
+        <div class="total-fee" id="totalFee">
+            <strong>Total Fee:</strong> <span id="feeAmount">$0</span>
+        </div>
+        <input type="hidden" id="register_for" value="{{ register_for }}">
+        <input type="hidden" id="age_group" value="{{ age_group }}">
+        <input type="hidden" id="level" value="{{ level }}">
+        <input type="hidden" id="class_type" value="{{ class_type }}">
+        
+        <!-- Time Slot Modal -->
+        <div class="modal" id="timeSlotModal">
+            <div class="modal-content">
+                <h3>Select a Time Slot for the Selected Date</h3>
+                <div id="timeSlotsContainer"></div>
+                <button class="confirm-btn" id="confirmTimesBtn">Confirm Time Slot</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const calendar = document.getElementById('calendar');
+        const monthTitle = document.getElementById('monthTitle');
+        const selectedDatesContainer = document.getElementById('dates');
+        const prevMonthBtn = document.getElementById('prevMonth');
+        const nextMonthBtn = document.getElementById('nextMonth');
+        const proceedBtn = document.getElementById('proceedBtn');
+        const timeSlotModal = document.getElementById('timeSlotModal');
+        const timeSlotsContainer = document.getElementById('timeSlotsContainer');
+        const confirmTimesBtn = document.getElementById('confirmTimesBtn');
+        const feeAmountElement = document.getElementById('feeAmount');
+        const totalFeeElement = document.getElementById('totalFee'); // Total fee element
+    
+        const monthNames = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+    
+        const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        let selectedDates = [];
+        let selectedTimeSlot = null;
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+        const today = new Date();
+    
+        const feePerDay = 20;
+        let fullyBookedDays = {};  // This will hold the booked days fetched from backend
+    
+        const availableTimeSlots = [
+            "08:00 AM - 09:00 AM", 
+            "04:00 AM - 06:00 AM", 
+            "6:00 AM - 7:00 PM" 
+            
+        ];
+      
+
+        function fetchFullyBookedDays() {
+           
+            const classType = document.getElementById('class_type').value;
+        
+            // Prepare the request data
+            const requestData = {
+                
+                class_type: classType
+            };
+        
+            // Fetch fully booked days from the backend with register_for and class_type as parameters
+            fetch('/get_fully_booked_days', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                fullyBookedDays = data;  // Update fullyBookedDays with the filtered data
+                createCalendar(currentMonth, currentYear);  // Initialize the calendar after fetching data
+            })
+            .catch(error => {
+                console.error('Error fetching fully booked days:', error);
+            });
+        }
+    
+    
+        function createCalendar(month, year) {
+            calendar.innerHTML = "";
+            monthTitle.textContent = `${monthNames[month]} ${year}`;
+    
+            dayNames.forEach(dayName => {
+                const dayHeader = document.createElement('div');
+                dayHeader.classList.add('day-header');
+                dayHeader.textContent = dayName;
+                calendar.appendChild(dayHeader);
+            });
+    
+            const firstDay = new Date(year, month).getDay();
+            const totalDays = new Date(year, month + 1, 0).getDate();
+    
+            for (let i = 0; i < firstDay; i++) {
+                const blank = document.createElement('div');
+                calendar.appendChild(blank);
+            }
+    
+            for (let day = 1; day <= totalDays; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.classList.add('day');
+                dayElement.textContent = day;
+    
+                const currentDate = new Date(year, month, day);
+                const formattedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    
+                if (fullyBookedDays[formattedDate]) {
+                    dayElement.classList.add('booked');
+                } else if (currentDate < today) {
+                    dayElement.classList.add('disabled');
+                } else {
+                    if (selectedDates.includes(formattedDate)) {
+                        dayElement.classList.add('selected');
+                    }
+    
+                    dayElement.addEventListener('click', function () {
+                        if (selectedDates.includes(formattedDate)) {
+                            selectedDates = selectedDates.filter(date => date !== formattedDate);
+                            dayElement.classList.remove('selected');
+                        } else {
+                            selectedDates.push(formattedDate);
+                            dayElement.classList.add('selected');
+                        }
+                        updateSelectedDates();
+                    });
+                }
+    
+                calendar.appendChild(dayElement);
+            }
+        }
+    
+        function updateSelectedDates() {
+            selectedDatesContainer.textContent = selectedDates.length
+                ? selectedDates.join(', ')
+                : 'None';
+    
+            proceedBtn.style.display = selectedDates.length ? 'inline-block' : 'none';
+    
+            // Calculate and update the total fee
+            const totalFee = selectedDates.length * feePerDay;
+            feeAmountElement.textContent = `$${totalFee}`;
+    
+            // Show or hide the total fee element based on the selected dates
+            totalFeeElement.style.display = selectedDates.length > 0 ? 'block' : 'none';
+        }
+    
+        proceedBtn.addEventListener('click', function () {
+            if (selectedDates.length) {
+                openTimeSlotModal();
+            }
+        });
+        function openTimeSlotModal() {
+            timeSlotModal.style.display = 'flex';
+            timeSlotsContainer.innerHTML = '';
+            
+            // Get the values of 'register_for' and 'class_type'
+            const registerFor = document.getElementById('register_for').value;
+            const classType = document.getElementById('class_type').value;
+            
+            // Filter available time slots based on the conditions
+            let filteredTimeSlots = [];
+        
+            if (registerFor === 'children' && classType === 'private' || registerFor === 'adult' && classType === 'private') {
+                // Show only "08:00 AM - 09:00 AM" for children in private class
+                filteredTimeSlots = ["08:00 AM - 09:00 AM"];
+            } else if (registerFor === 'children' && classType === 'group') {
+                // Example: for adults private, show another time slot (can adjust this logic)
+                filteredTimeSlots = ["04:00 AM - 05:00 AM"];
+            } else {
+                // For other cases, show all available slots
+                filteredTimeSlots = ["06:00 AM - 07:00 AM"];
+            }
+        
+            // Loop through filtered time slots and add them to the modal
+            filteredTimeSlots.forEach(slot => {
+                const slotElement = document.createElement('div');
+                slotElement.classList.add('time-slot');
+                slotElement.textContent = slot;
+        
+                slotElement.addEventListener('click', function () {
+                    if (selectedTimeSlot === slot) {
+                        selectedTimeSlot = null;
+                        slotElement.classList.remove('selected');
+                    } else {
+                        selectedTimeSlot = slot;
+                        document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                        slotElement.classList.add('selected');
+                    }
+                });
+        
+                timeSlotsContainer.appendChild(slotElement);
+            });
+        }
+        confirmTimesBtn.addEventListener('click', function () {
+            if (!selectedTimeSlot) {
+                alert('Please select a time slot before proceeding to payment.'); // Alert if no slot is selected
+            } else {
+                const scheduleData = {
+                    register_for: document.getElementById('register_for').value,
+                    age_group: document.getElementById('age_group').value,
+                    level: document.getElementById('level').value,
+                    class_type: document.getElementById('class_type').value,
+                    selected_dates: selectedDates,
+                    selected_time_slot: selectedTimeSlot
+                };
+                console.log('Sending schedule data:', scheduleData);
+    
+                fetch('/save_schedule', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(scheduleData)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to save schedule');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data.message); // Success message
+                    // Redirect to the payment page or another success page
+                    window.location.href = `/payment_page?amount=${selectedDates.length * feePerDay}`;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('There was an error saving your schedule. Please try again.');
+                });
+                
+                timeSlotModal.style.display = 'none';
+            }
+        });
+    
+        prevMonthBtn.addEventListener('click', function () {
+            if (currentMonth === 0) {
+                currentMonth = 11;
+                currentYear--;
+            } else {
+                currentMonth--;
+            }
+            createCalendar(currentMonth, currentYear);
+        });
+    
+        nextMonthBtn.addEventListener('click', function () {
+            if (currentMonth === 11) {
+                currentMonth = 0;
+                currentYear++;
+            } else {
+                currentMonth++;
+            }
+            createCalendar(currentMonth, currentYear);
+        });
+    
+        // Initialize the calendar after fetching fully booked days
+        fetchFullyBookedDays();
+    </script>
+    
+</body>
+</html>

@@ -1,108 +1,63 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>Welcome to the Swimming Pool</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
-    <!-- Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Pool Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}" />
 </head>
-
 <body>
-    <!-- Navigation Bar
-    <div class="navbar">
-        <div class="nav-right">
-            <a href="{{ url_for('login') }}">Login</a>
-            <a href="{{ url_for('register') }}">Register</a>
-        </div>
-    </div>
-    -->
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light" style="background-color:  rgba(11, 11, 11, 0.7);">
-        <div class="container-fluid">
-            <div class="row w-100">
-                <div class="col-9">
-                    <div class="col-8 text-white">
-                        <a class="navbar-brand text-white"
-                            href="mailto:info.poolmanagement@gmail.com">info.poolmanagement@gmail.com</a>
-                    </div>
-                </div>
-                <div class="col-3 justify-content-end">
-                    <div class="row">
-                        <div class="col text-white text-center">
-                            <a class="navbar-brand text-white" href="#">Calendar</a>
-                        </div>
-                        <div class="col text-white text-right">
-                            <a class="navbar-brand text-white" href="https://www.google.com/maps/place/Nizamabad,+Telangana/@18.6807417,78.0048373,12z/data=!3m1!4b1!4m6!3m5!1s0x3bcddb27a9a89045:0x9f38c4351a15bbf2!8m2!3d18.6725047!4d78.0940867!16zL20vMDU5NGs2?entry=ttu&g_ep=EgoyMDI0MDkzMC4wIKXMDSoASAFQAw%3D%3D">View Address</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
-    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgba(11, 11, 11, 0.7);">
-        <div class="ps-3">
-            <a class="navbar-brand text-white" href="#">MyWebsite</a>
-        </div>
-        <!-- Add a dropdown in the center -->
-        <div class="mx-auto">
-            <div class="dropdown">
-                <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                    Select Category
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <li><a class="dropdown-item" href="#">Adult</a></li>
-                    <li><a class="dropdown-item" href="#">Child</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav ml-auto">
-                <!-- Two buttons aligned to the right -->
-                <li class="nav-item">
-                    <a class="btn btn-primary mx-2" href="{{ url_for('login') }}">Login</a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-secondary mx-2" href="{{ url_for('register') }}">Register</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
     
-    <!-- Content Section -->
-    <div class="row">
-        <div class="content col-6 mt-4 pt-4">
-            <h1>Welcome to the Swimming Pool!</h1>
-            <p>
-                Our swimming pool is a great place to unwind and get a full-body workout. Whether you're a beginner or
-                an experienced swimmer,
-                we have something for everyone. Enjoy our well-maintained, heated pool, and take advantage of our
-                swimming lessons and aquatic fitness classes.
-            </p>
-            <p>
-                Swimming is not only a fun activity but also an excellent way to stay fit. It helps in building
-                endurance, muscle strength, and cardiovascular fitness.
-                Join us for a refreshing and invigorating swim!
-            </p>
-            <!-- Quotes Section -->
-            <div class="quotes">
-                <blockquote>
-                    "The water is your friend. You don’t have to fight with water, just share the same spirit as the
-                    water, and it will help you move."
-                    <footer>— Aleksandr Popov</footer>
-                </blockquote>
-                <blockquote>
-                    "Swim to be fit, swim to be happy."
-                    <footer>— Anonymous</footer>
-                </blockquote>
+    <div class="top-bar">
+        <div class="container">
+            <div class="left">
+                <img src="https://cdn4.iconfinder.com/data/icons/social-media-logos-6/512/112-gmail_email_mail-512.png" alt="Email Icon">
+                <a href="mailto:info.poolmanagement@gmail.com">info.poolmanagement@gmail.com</a>
+            </div>
+            <div class="right">
+                <a href="#">Calendar</a>
+                <a href="#">View Address</a>
             </div>
         </div>
     </div>
-</body>
 
-</html>
+
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="logo">Smart Pool</a>
+            <div class="nav-links">
+                <div class="dropdown">
+                    <a href="#">Swim Lessons</a>
+                    <div class="dropdown-content">
+                        <a id="childClassesLink" href="">Child</a>
+                        <a id="adultClassesLink" href="#">Adult</a>
+                    </div>
+                </div>
+                <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('register') }}">Register</a>
+            </div>
+        </div>
+    </nav>
+
+ 
+    <div class="hero">
+        <div class="hero-content">
+            <h1>New Austin Location</h1>
+            <p>Experience the future of aquatics at our state-of-the-art facility</p>
+            <a href="#" class="cta-button">Pre-register Now</a>
+        </div>
+    </div>
+
+    <!-- Class Listings Section -->
+   
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>© 2024 Smart Pool Management. All rights reserved.</p>
+    </div>
+
+   
+   
+</body>
+</html> 

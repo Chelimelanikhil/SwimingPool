@@ -1,84 +1,351 @@
-/* Set background image for the whole page */
+:root {
+    --primary-color: #0077be;
+    --secondary-color: #00a8e8;
+    --accent-color: #f9a825;
+    --text-color: #333;
+    --light-bg: #f4f4f4;
+}
+
 body {
+    font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
-    background: url('../images/swimming-pool-bg.jpeg') no-repeat center center fixed;
-    background-size: cover;
-    overflow-x: hidden; /* Prevent horizontal scrolling */
-}
-/* Navigation Bar Styling */
-.navbar {
-    position: absolute;
-    width: 100%;
-    top: 0;
-    left: 0;
-    background: rgba(0, 0, 0, 0.6); /* Dark overlay for better text visibility */
-    padding: 15px 30px; /* Increased padding for a taller navbar */
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
-    display: flex; /* Use Flexbox to align items */
-    justify-content: flex-end; /* Align items to the right */
-    box-sizing: border-box; /* Ensure padding is included in the width */
-}
-
-.nav-right {
-    display: flex;
-    align-items: center; /* Center items vertically */
-}
-
-.nav-right a {
-    color: white;
-    text-decoration: none;
-    margin: 0 15px;
-    font-size: 16px;
-}
-
-.nav-right a:hover {
-    text-decoration: underline;
-}
-
-
-.nav-right a:hover {
-    text-decoration: underline;
-}
-
-/* Content Section Styling */
-.content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(255, 255, 255, 0.8); /* Slight white background for better text readability */
-    padding: 30px;
-    border-radius: 8px;
-    max-width: 600px;
-    text-align: center;
-}
-
-.content h1 {
-    margin-top: 0;
-    color: #333;
-}
-
-.content p {
-    color: #555;
+    box-sizing: border-box;
+    color: var(--text-color);
     line-height: 1.6;
 }
 
-/* Quotes Section Styling */
-.quotes {
-    margin-top: 20px;
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-blockquote {
-    border-left: 4px solid #4CAF50; /* Green border for emphasis */
-    padding-left: 20px;
-    margin: 20px 0;
-    font-style: italic;
-    color: #333;
-}
-
-blockquote footer {
+/* Top bar styles */
+.top-bar {
+    background-color: var(--primary-color);
+    padding: 10px 0;
     font-size: 14px;
-    color: #777;
 }
+
+.top-bar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.top-bar a {
+    color: white;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+}
+
+
+
+.top-bar img {
+    height: 16px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+.right {
+    display: flex;
+    gap: 15px; /* Add gap between items */
+}
+
+.right a {
+    text-decoration: none;
+    color: white;
+}
+.right a:hover {
+    text-decoration: underline;
+}
+
+
+/* Navbar styles */
+.navbar {
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+}
+
+.nav-links a {
+    margin: 0 15px;
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--secondary-color);
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 160px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.dropdown-content a {
+    color: var(--text-color);
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-content a:hover {
+    background-color: var(--light-bg);
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Hero section styles */
+.hero {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://img.freepik.com/premium-photo/grainy-gradient-background-red-white-blue-colors-with-soft-faded-watercolor-border-texture_927344-24167.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+}
+
+.hero-content {
+    max-width: 800px;
+}
+
+.hero h1 {
+    font-size: 48px;
+    margin: 0;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.hero p {
+    font-size: 24px;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+    margin: 20px 0;
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: var(--accent-color);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #f57f17;
+}
+
+/* Class listings styles */
+.class-listings {
+    padding: 50px 0;
+    background-color: var(--light-bg);
+}
+
+.class-listings h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--primary-color);
+}
+
+.class-selector {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+
+.class-selector button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.class-selector button:hover,
+.class-selector button.active {
+    background-color: var(--secondary-color);
+}
+
+.class-list {
+    display: none;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.class-list.active {
+    display: grid;
+}
+
+.class-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.3s ease;
+}
+
+.class-card:hover {
+    transform: translateY(-5px);
+}
+
+.class-card h3 {
+    color: var(--primary-color);
+    margin-top: 0;
+}
+
+.class-card p {
+    margin: 10px 0;
+}
+
+.class-card .time {
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+/* Footer style */
+.footer {
+    background-color: var(--primary-color);
+    padding: 40px 0;
+    color: white;
+    text-align: center;
+}
+
+.footer p {
+    margin: 0;
+    font-size: 14px;
+}
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.header, .footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+}
+
+h1, h2 {
+    margin: 0;
+}
+
+.class-tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.class-tabs button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    background-color: #008cba;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.class-tabs button.active {
+    background-color: #005f75;
+}
+
+.class-list {
+    display: none;
+    flex-wrap: wrap; /* Allows wrapping of items */
+    justify-content: center; /* Centers the cards */
+}
+
+.class-list.active {
+    display: flex; /* Display only the active list */
+    flex-direction: column; /* Column direction for buttons and cards */
+    align-items: center; /* Center items horizontally */
+}
+
+.class-selector {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px; /* Space between buttons and cards */
+}
+
+.class-selector button {
+    margin: 0 10px;
+    padding: 10px 15px;
+    background-color: #008cba;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.class-selector button.active {
+    background-color: #005f75;
+}
+
+/* Styles for horizontal card layout */
+.adultClasses .class-list.active {
+    flex-direction: row; /* Align cards in a row */
+    flex-wrap: wrap; /* Allow wrapping if there are too many cards */
+    justify-content: center; /* Center the cards in the row */
+}
+
+.class-card {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 10px;
+    width: 200px; /* Set a fixed width for cards */
+    text-align: center; /* Center the text in the card */
+}
+
+.footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+

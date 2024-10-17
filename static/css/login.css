@@ -7,6 +7,7 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
     background-color: #f0f0f0;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://img.freepik.com/premium-photo/grainy-gradient-background-red-white-blue-colors-with-soft-faded-watercolor-border-texture_927344-24167.jpg');
 }
 
 /* General form container styling */
@@ -28,7 +29,13 @@ h2 {
 }
 
 /* Styling input fields */
-input[type="text"], input[type="email"], input[type="password"], input[type="number"], input[type="tel"], textarea, select {
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+textarea,
+select {
     width: calc(100% - 22px); /* Adjusted width for better fit */
     padding: 10px;
     margin: 5px 0;
@@ -36,6 +43,18 @@ input[type="text"], input[type="email"], input[type="password"], input[type="num
     border-radius: 4px;
     box-sizing: border-box;
     font-size: 14px;
+}
+
+/* Styling for date input */
+input[type="date"] {
+    width: calc(100% - 22px); /* Adjusted width for better fit */
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+    background-color: #ffffff; /* White background for better visibility */
 }
 
 /* Input fields displayed in a compact row */
@@ -57,12 +76,13 @@ textarea {
 }
 
 input[type="number"] {
-   margin-left: 10px;
+    margin-left: 10px;
 }
 
 input[type="tel"] {
     margin-right: 10px;
- }
+}
+
 /* Submit button styling */
 input[type="submit"] {
     width: 95%;
@@ -104,8 +124,3 @@ p {
     margin-top: 10px;
     color: #555;
 }
-.flash-message {
-    color: red;
-    margin-bottom: 10px;
-}
-

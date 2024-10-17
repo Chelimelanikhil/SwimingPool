@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user_dashboard.css') }}" />
+</head>
+<body class="bg-gray-100 font-sans">
+    <header class="header bg-blue-600 text-white shadow-lg py-2">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold">Profile</h1>
+            <div class="flex space-x-4">
+                <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container mx-auto px-4 py-8 flex flex-col items-center">
+        <!-- Profile Icon -->
+        <div class="mb-6">
+            <i class="fas fa-user-circle text-6xl text-blue-600"></i>
+        </div>
+
+        <!-- Basic Information -->
+        <div class="bg-white shadow-md rounded-lg p-6 w-full md:w-1/2">
+            <h2 class="text-2xl font-semibold mb-4 text-center">Basic Information</h2>
+            <div class="grid grid-cols-1 gap-4">
+                <div>
+                    <label class="block text-gray-600 font-medium">Name:</label>
+                    <p class="text-gray-800">John Doe</p>
+                </div>
+                <div>
+                    <label class="block text-gray-600 font-medium">Email:</label>
+                    <p class="text-gray-800">john.doe@example.com</p>
+                </div>
+                <div>
+                    <label class="block text-gray-600 font-medium">Phone:</label>
+                    <p class="text-gray-800">+1 (234) 567-8901</p>
+                </div>
+                <div>
+                    <label class="block text-gray-600 font-medium">Address:</label>
+                    <p class="text-gray-800">123 Main St, City, Country</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
