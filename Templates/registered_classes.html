@@ -9,33 +9,51 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/user_dashboard.css') }}" />
 </head>
 <body class="bg-gray-100 font-sans">
-    <header class="header bg-blue-600 text-white shadow-lg py-2">
+    <header class="header bg-blue-600 text-white shadow-lg py-3">
         <div class="container mx-auto flex justify-between items-center">
             <h1 class="text-3xl font-bold">Registered Classes</h1>
-            <div class="flex space-x-4">
-                <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">
+            <div class="flex space-x-2">
+                <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out">
                     <i class="fas fa-sign-out-alt mr-2"></i>Logout
                 </a>
             </div>
         </div>
     </header>
 
-    <div class="container mx-auto px-4 py-8 flex flex-col items-center">
-        <!-- Classes Icon -->
-        <div class="mb-6">
-            <i class="fas fa-book-open text-6xl text-blue-600"></i>
+    <div class="container mx-auto px-4 py-10">
+        <!-- Page Title and Icon -->
+        <div class="text-center mb-10">
+            <i class="fas fa-book-open text-7xl text-blue-600 mb-4"></i>
+            <h2 class="text-4xl font-bold text-gray-800">Your Registered Classes</h2>
+            <p class="text-gray-600 mt-2">Here are the classes you've registered for.</p>
         </div>
 
-        <!-- Registered Classes List -->
-        <div class="bg-white shadow-md rounded-lg p-6 w-full md:w-1/2">
-            <h2 class="text-2xl font-semibold mb-4 text-center">Your Registered Classes</h2>
-            <ul class="list-disc pl-6">
-                <li class="text-gray-800">Swimming Basics</li>
-                <li class="text-gray-800">Advanced Diving</li>
-                <li class="text-gray-800">Water Safety Course</li>
-                <li class="text-gray-800">Competitive Swimming Techniques</li>
-            </ul>
+        <!-- Registered Classes Horizontal List -->
+        <div class="space-y-6">
+            {% for class in classes %}
+            <div class="bg-white shadow-lg rounded-lg p-6 flex items-center space-x-6 transition duration-300 transform hover:scale-105">
+                <div class="text-blue-600">
+                    <i class="fas fa-swimmer text-5xl"></i>
+                </div>
+                <div class="flex-grow">
+                    <h3 class="text-xl font-semibold text-blue-600 mb-1">{{ class.register_for }}</h3>
+                    <p class="text-gray-700"><strong>Age Group:</strong> {{ class.age_group }}</p>
+                    <p class="text-gray-700"><strong>Level:</strong> {{ class.level }}</p>
+                    <p class="text-gray-700"><strong>Class Type:</strong> {{ class.class_type }}</p>
+                    <p class="text-gray-700"><strong>Schedule Date:</strong> {{ class.schedule_date }}</p>
+                    <p class="text-gray-700"><strong>Time Slot:</strong> {{ class.time_slot }}</p>
+                    <p class="text-gray-700"><strong>Registration Date:</strong> {{ class.registration_date }}</p>
+                </div>
+            </div>
+            {% endfor %}
+            {% if not classes %}
+            <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                <p class="text-gray-800 text-xl">No registered classes found.</p>
+            </div>
+            {% endif %}
         </div>
     </div>
+
+   
 </body>
 </html>

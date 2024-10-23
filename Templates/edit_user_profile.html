@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit User</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Custom styles */
+        body {
+            background-color: #f8fafc; /* Light background for contrast */
+        }
+        h3 {
+            color: #2d3748; /* Darker text color */
+        }
+        .form-container {
+            background-color: #ffffff; /* White background for the form */
+            border-radius: 0.5rem; /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        }
+        .form-label {
+            font-size: 0.875rem; /* Slightly larger font size for labels */
+            color: #4a5568; /* Label color */
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto px-6 py-8">
+        <h3 class="text-gray-800 text-3xl font-semibold mb-6">Edit User</h3>
+
+        <div class="form-container p-6">
+            <form action="{{ url_for('update_user_profile', user_id=user.UserID) }}" method="POST">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block form-label">First Name</label>
+                        <input type="text" name="firstName" class="border rounded p-2 w-full" value="{{ user.FirstName }}" required>
+                    </div>
+                    <div>
+                        <label class="block form-label">Last Name</label>
+                        <input type="text" name="lastName" class="border rounded p-2 w-full" value="{{ user.LastName }}" required>
+                    </div>
+                    <div>
+                        <label class="block form-label">Email</label>
+                        <input type="email" name="email" class="border rounded p-2 w-full" value="{{ user.Email }}" required>
+                    </div>
+                    <div>
+                        <label class="block form-label">Gender</label>
+                        <select name="gender" class="border rounded p-2 w-full">
+                            <option value="Male" {% if user.Gender == 'Male' %}selected{% endif %}>Male</option>
+                            <option value="Female" {% if user.Gender == 'Female' %}selected{% endif %}>Female</option>
+                            <option value="Other" {% if user.Gender == 'Other' %}selected{% endif %}>Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block form-label">Date of Birth</label>
+                        <input type="date" id="birthDate" name="birthDate" value="{{ user.DateOfBirth.strftime('%Y-%m-%d') }}" class="border rounded p-2 w-full">
+                    </div>
+                    <div>
+                        <label class="block form-label">Mobile No</label>
+                        <input type="text" name="mobileNo" class="border rounded p-2 w-full" value="{{ user.MobileNo }}" required>
+                    </div>
+                    <div>
+                        <label class="block form-label">Pincode</label>
+                        <input type="text" name="pincode" class="border rounded p-2 w-full" value="{{ user.Pincode }}" required>
+                    </div>
+                    <div>
+                        <label class="block form-label">Address</label>
+                        <input type="text" name="address" class="border rounded p-2 w-full" value="{{ user.Address }}" required>
+                    </div>
+                    <div>
+                      <label class="block form-label">Country</label>
+                      <input type="text" name="country" class="border rounded p-2 w-full" value="{{ user.Country }}" required>
+                  </div>
+                  <div>
+                      <label class="block form-label">State</label>
+                      <input type="text" name="state" class="border rounded p-2 w-full" value="{{ user.State }}" required>
+                  </div>
+                  
+                </div>
+
+                <div class="mt-14 flex justify-center space-x-4">
+                    <a href="{{ url_for('view_user_profiles') }}" class="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400">Cancel</a>
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

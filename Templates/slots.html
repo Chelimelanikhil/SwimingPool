@@ -284,11 +284,13 @@ body {
         function fetchFullyBookedDays() {
            
             const classType = document.getElementById('class_type').value;
+            const registerFor = document.getElementById('register_for').value;
         
             // Prepare the request data
             const requestData = {
                 
-                class_type: classType
+                class_type: classType,
+                register_for:registerFor
             };
         
             // Fetch fully booked days from the backend with register_for and class_type as parameters

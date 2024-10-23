@@ -34,11 +34,14 @@ def register():
         mobile_no = request.form['mobileNo']
         pincode = request.form['pincode']
         address = request.form['address']
+        country = request.form['country']  # New field for Country
+        state = request.form['state']      # New field for State
+        role = "User"
 
         # Check if the email already exists in the database
         conn = pyodbc.connect(conn_str)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM User WHERE email = ?", (email,))
+        cur.execute("SELECT * FROM Users WHERE email = ?", (email,))
         user = cur.fetchone()
         
         if user:
@@ -49,11 +52,11 @@ def register():
         # Hash the password before storing it
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
-        # Insert the form data into the database
+        # Insert the form data into the database, including Country and State
         cur.execute(""" 
-            INSERT INTO User (FirstName, LastName, Email, Password, Gender, DateOfBirth, MobileNo, Pincode, Address) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
-            (first_name, last_name, email, hashed_password, gender, birth_date, mobile_no, pincode, address)
+            INSERT INTO Users (FirstName, LastName, Email, Password, Gender, DateOfBirth, MobileNo, Pincode, Address, Country, State, Role) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (first_name, last_name, email, hashed_password, gender, birth_date, mobile_no, pincode, address, country, state, role)
         )
         
         # Commit the transaction and close the connection
@@ -68,6 +71,7 @@ def register():
     return render_template('register.html')
 
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -77,19 +81,19 @@ def login():
         # Connect to the database
         conn = pyodbc.connect(conn_str)
         cur = conn.cursor()
-        cur.execute("SELECT * FROM User WHERE email = ?", (email,))
+        cur.execute("SELECT * FROM Users WHERE email = ?", (email,))
         user = cur.fetchone()
         cur.close()
 
         # Check if the user exists
         if user:
-            stored_hash = user[2]  # Assuming user[2] is the password column
+            stored_hash = user[4]  # Assuming user[2] is the password column
             # Verify password
             if bcrypt.check_password_hash(stored_hash, password):  # Use check_password_hash directly
                 session['loggedin'] = True
                 session['id'] = user[0]  # Assuming user[0] is the ID column
                 session['username'] = user[1]  # Assuming user[1] is the username column
-                session['role'] = user[7]  # Assuming user[7] is the role column
+                session['role'] = user[12]  # Assuming user[7] is the role column
                 return redirect(url_for('dashboard'))  # Assuming you have a dashboard route
             else:
                 flash('Incorrect email or password', 'danger')
@@ -98,7 +102,72 @@ def login():
 
     return render_template('login.html')
 
+# def get_dashboard_data():
+#     # Replace with your actual database connection and queries
+#     data = {
+#         'registered_users': 8282,  # Example data
+#         'active_classes': 200,
+#         'pending_orders': 32
+#     }
+#     return data
 
+def get_dashboard_data():
+    try:
+        # Connect to the database
+        conn = pyodbc.connect(conn_str)
+        cur = conn.cursor()
+
+        # Query to get the count of registered users
+        cur.execute("SELECT COUNT(*) FROM Users")  # Assuming you have a Users table
+        registered_users = cur.fetchone()[0]
+        print(registered_users)
+
+        # Query to get the count of active classes
+        cur.execute("SELECT COUNT(*) FROM swimSchedules")  # Adjust based on your schema
+        active_classes = cur.fetchone()[0]
+
+        cur.execute("SELECT SUM(Amount) FROM Payments")  # Assuming the amount column is in the Payments table
+        total_revenue = cur.fetchone()[0] or 0  # Use 0 if there are no payments
+
+        
+        # Close the cursor and connection
+        cur.close()
+        conn.close()
+
+        # Return the data
+        return {
+            'registered_users': registered_users,
+            'active_classes': active_classes,
+            'total_revenue': total_revenue
+            
+        }
+
+    except Exception as e:
+        print("An error occurred while fetching dashboard data:", str(e))
+        return {
+            'registered_users': 0,
+            'active_classes': 0,
+            'total_revenue': 0
+        }
+
+@app.route('/Dashboard')
+def Dashboard():
+    # Call the function to get the dashboard data
+    dashboard_data = get_dashboard_data()
+    return render_template('Dashboard.html', data=dashboard_data)
+
+
+
+# Dashboard route (protected)
+@app.route('/dashboard')
+def dashboard():
+    if 'loggedin' in session:
+        role = session.get('role')
+        if role == 'Admin':
+            return redirect(url_for('admin_dashboard'))
+        elif role == 'User':
+            return redirect(url_for('user_dashboard'))
+    return redirect(url_for('login'))
 
 
 @app.route('/registerswim', methods=['GET', 'POST'])
@@ -218,7 +287,6 @@ def date_selection():
 @app.route('/save_schedule', methods=['POST'])
 def save_schedule():
     data = request.json  # Get the JSON data from the request
-    print(data)
     user_id = session['id']  # Get the user ID from the session
     register_for = data.get('register_for')
     age_group = data.get('age_group')
@@ -266,8 +334,9 @@ def save_schedule():
 def get_fully_booked_days():
     data = request.get_json()  # Get the JSON data from the request
     print(data)
-    
+
     class_type = data.get('class_type')
+    register_for = data.get('register_for')  # Get the register_for value from the request
 
     fully_booked_days = set()  # To avoid duplicate dates
 
@@ -284,14 +353,19 @@ def get_fully_booked_days():
         else:
             return jsonify({"error": "Invalid class_type"}), 400
 
-        # Fetch fully booked days based on register_for and class_type with the appropriate limit
+        # Get the current date in the format 'YYYY-MM-DD'
+        current_date = datetime.now().strftime('%Y-%m-%d')
+
+        # Fetch fully booked days based on register_for, class_type, and the appropriate limit
         query = """
             SELECT schedule_date FROM swimSchedules
-            WHERE class_type = ?
+            WHERE class_type = ? 
+              AND schedule_date >= ? 
+              AND register_for = ?
             GROUP BY schedule_date
             HAVING COUNT(ID) >= ?
         """
-        cursor.execute(query, (class_type, limit))
+        cursor.execute(query, (class_type, current_date, register_for, limit))
         booked_days_rows = cursor.fetchall()
 
         # Add fully booked dates
@@ -358,12 +432,27 @@ def registerclass():
 def success_page():
     return render_template('success.html')
 
-@app.route('/dashboard')
-def dashboard():
+@app.route('/user_dashboard')
+def user_dashboard():
     if 'loggedin' not in session:
         flash('You need to log in to access the dashboard.', 'danger')
         return redirect(url_for('login'))
     return render_template('user_dashboard.html')
+
+
+
+
+@app.route('/admin_dashboard')
+def admin_dashboard():
+    if 'loggedin' in session and session.get('role') == 'Admin':
+        return redirect(url_for('Dashboard'))
+    else:
+        flash('Access denied. Admins only.', 'danger')
+        return redirect(url_for('dashboard'))
+
+
+
+
 
 @app.route('/logout')
 def logout():
@@ -372,13 +461,380 @@ def logout():
     return redirect(url_for('home'))
 
 
-@app.route('/profile')
-def profile():
-    return render_template('profilepage.html')
+# @app.route('/profile')
+# def profile():
+#     return render_template('profilepage.html')
+
+@app.route('/profile', methods=['GET'])
+def get_user_profile():
+    if 'loggedin' in session:
+        userid = session['id']  # Get the UserID from the session
+
+        try:
+            # Connect to the database
+            conn = pyodbc.connect(conn_str)
+            cur = conn.cursor()
+
+            # Fetch user details using the UserID from the session
+            cur.execute("""
+                SELECT FirstName, LastName, Email, Gender, DateOfBirth, MobileNo, Pincode, Address, Country, State, Role 
+                FROM Users 
+                WHERE UserID = ?
+            """, (userid,))
+            user = cur.fetchone()
+            cur.close()
+
+            # If user details are found, return them as a JSON response or render a template
+            if user:
+                user_details = {
+                    'id': userid,
+                    'FirstName': user[0],
+                    'LastName': user[1],
+                    'Email': user[2],
+                    'Gender': user[3],
+                    'DateOfBirth': str(user[4]),  # Convert date to string
+                    'MobileNo': user[5],
+                    'Pincode': user[6],
+                    'Address': user[7],
+                    'Country': user[8],  # New field for Country
+                    'State': user[9]    # New field for State
+                    
+                }
+                # Render the profile template or return user details in JSON format
+                return render_template('profilepage.html', user=user_details)
+
+            # If user details are not found, return an error
+            else:
+                flash('User not found', 'danger')
+                return redirect(url_for('login'))
+
+        except Exception as e:
+            # Handle any database connection or execution errors
+            return jsonify({'error': str(e)}), 500
+
+    else:
+        flash('Please log in to view your profile', 'warning')
+        return redirect(url_for('login'))
+
+    
+
+
+@app.route('/swimschedule', methods=['GET'])
+def get_swim_schedule():
+    try:
+        # Connect to the database
+        conn = pyodbc.connect(conn_str)
+        cur = conn.cursor()
+
+        # Query to get all classes from swimSchedules
+        cur.execute("SELECT * FROM swimSchedules")
+        classes = cur.fetchall()
+
+        # Close the cursor and connection
+        cur.close()
+        conn.close()
+
+        # Process the results into a list of dictionaries
+        schedule_list = []
+        for row in classes:
+            schedule_list.append({
+                'register_for': row[1],         # Assuming column index 1 is register_for
+                'age_group': row[2],            # Assuming column index 2 is age_group
+                'level': row[3],                # Assuming column index 3 is level
+                'class_type': row[4],           # Assuming column index 4 is class_type
+                'schedule_date': row[5],        # Assuming column index 5 is schedule_date
+                'time_slot': row[6],            # Assuming column index 6 is time_slot
+                'registration_date': row[8]      # Assuming column index 8 is registration_date
+            })
+
+        # Return the JSON response
+        return jsonify(schedule_list)
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 
 @app.route('/registered_classes')
 def registered_classes():
-    return render_template('registered_classes.html')
+    user_id = session.get('id')  # Assuming you're storing the user ID in the session after login
+    if not user_id:
+        flash('Please log in to view your registered classes.', 'warning')
+        return redirect(url_for('login'))
+
+    try:
+        # Connect to the database
+        conn = pyodbc.connect(conn_str)
+        cur = conn.cursor()
+
+        # Query to get all registered classes for the specific user
+        query = "SELECT * FROM swimSchedules WHERE UserID = ?"
+        cur.execute(query, (user_id,))  # Ensure the tuple has a trailing comma
+
+        classes = cur.fetchall()
+
+        # Close the cursor and connection
+        cur.close()
+        conn.close()
+
+        # Process the results into a list of dictionaries
+        schedule_list = []
+        for row in classes:
+            schedule_list.append({
+                'register_for': row[1],         # Adjust based on actual column indices
+                'age_group': row[2],
+                'level': row[3],
+                'class_type': row[4],
+                'schedule_date': row[5],
+                'time_slot': row[6],
+                'registration_date': row[8]
+            })
+
+        # Render the template with the classes data
+        return render_template('registered_classes.html', classes=schedule_list)
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+    
+
+    
+@app.route('/view_all_user_classes', methods=['GET'])
+def view_all_user_classes():
+    try:
+        # Connect to the database
+        conn = pyodbc.connect(conn_str)
+        cur = conn.cursor()
+
+        # Query to fetch all classes, with LEVEL column escaped using brackets
+        query = """
+            SELECT register_for, age_group, [level], class_type, schedule_date, time_slot, registration_date
+            FROM swimSchedules
+        """
+        cur.execute(query)
+
+        # Fetch all results
+        classes = cur.fetchall()
+
+        # Process the results into a list of dictionaries
+        class_list = []
+        for row in classes:
+            class_list.append({
+                'register_for': row[0],
+                'age_group': row[1],
+                'level': row[2],  # Adjusted the index for each column
+                'class_type': row[3],
+                'schedule_date': row[4],
+                'time_slot': row[5],
+                'registration_date': row[6]
+            })
+
+        # Close the cursor and connection
+        cur.close()
+        conn.close()
+
+        # Render the template with the class list
+        return render_template('all_classes.html', classes=class_list)
+
+    except Exception as e:
+        return str(e), 500
+
+
+
+
+
+
+@app.route('/approve_waitlist')
+def approve_waitlist():
+    return render_template('approve_waitlist.html')
+
+@app.route('/respond_enquiry')
+def respond_enquiry():
+    return render_template('respond_enquiry.html')
+
+@app.route('/update_view_schedule')
+def update_view_schedule():
+    return render_template('update_view_schedule.html')
+
+
+
+@app.route('/view_update_fee_structure')
+def view_update_fee_structure():
+    return render_template('view_update_fee_structure.html')
+
+@app.route('/view_user_profiles', methods=['GET'])
+def view_user_profiles():
+    try:
+        # Connect to the database
+        conn = pyodbc.connect(conn_str)
+        cur = conn.cursor()
+
+        # Execute a query to get all users along with Country and State
+        cur.execute("""
+            SELECT UserID, FirstName, LastName, Email, Gender, DateOfBirth, 
+                   MobileNo, Pincode, Address, Country, State, Role 
+            FROM Users
+        """)
+        users = cur.fetchall()  # Fetch all results
+
+        # Close the cursor and connection
+        cur.close()
+        conn.close()
+
+        # Convert the results to a list of dictionaries for easy handling in templates
+        user_list = []
+        for user in users:
+            user_list.append({
+                'id': user.UserID,
+                'first_name': user.FirstName,
+                'last_name': user.LastName,
+                'email': user.Email,
+                'gender': user.Gender,
+                'date_of_birth': user.DateOfBirth,
+                'mobile_no': user.MobileNo,
+                'pincode': user.Pincode,
+                'address': user.Address,
+                'country': user.Country,  # Added Country field
+                'state': user.State,      # Added State field
+                'role': user.Role
+            })
+
+        # Render a template to display the users
+        return render_template('view_user_profiles.html', users=user_list)
+
+    except Exception as e:
+        # Handle any exceptions (e.g., log the error)
+        print(f"An error occurred: {e}")
+        flash('An error occurred while fetching user data.', 'danger')
+        return redirect(url_for('dashboard'))  # Redirect to a safe page
+
+
+
+
+@app.route('/edit_user/<int:user_id>', methods=['GET'])
+def edit_user(user_id):
+    conn = pyodbc.connect(conn_str)
+    cur = conn.cursor()
+
+    # Fetch the user data to prepopulate the form
+    print(user_id)
+    cur.execute("SELECT * FROM Users WHERE UserID = ?", (user_id,))
+    user = cur.fetchone()
+    cur.close()
+
+    if user:
+        return render_template('edit_user.html', user=user)
+    else:
+        flash('User not found.', 'danger')
+        return redirect(url_for('users'))
+    
+
+@app.route('/edit_user_profile/<int:user_id>', methods=['GET'])
+def edit_user_profile(user_id):
+    conn = pyodbc.connect(conn_str)
+    cur = conn.cursor()
+
+    # Fetch the user data to prepopulate the form
+    print(user_id)
+    cur.execute("SELECT * FROM Users WHERE UserID = ?", (user_id,))
+    user = cur.fetchone()
+    cur.close()
+
+    if user:
+        return render_template('edit_user_profile.html', user=user)
+    else:
+        flash('User not found.', 'danger')
+        return redirect(url_for('users'))
+
+
+@app.route('/delete_user/<int:user_id>', methods=['POST'])
+def delete_user(user_id):
+    conn = pyodbc.connect(conn_str)
+    cur = conn.cursor()
+    
+    cur.execute("DELETE FROM Users WHERE UserID = ?", (user_id,))
+    conn.commit()
+    cur.close()
+    
+    flash('User deleted successfully!', 'success')
+    return redirect(url_for('view_user_profiles'))
+
+
+
+@app.route('/update_user/<int:user_id>', methods=['POST'])
+def update_user(user_id):
+    if request.method == 'POST':
+        # Capture form data
+        first_name = request.form['firstName']
+        last_name = request.form['lastName']
+        email = request.form['email']
+        gender = request.form['gender']
+        birth_date = request.form['birthDate']
+        mobile_no = request.form['mobileNo']
+        pincode = request.form['pincode']
+        address = request.form['address']
+        country = request.form['country']  # New field
+        state = request.form['state']      # New field
+
+        # Connect to the database and update user data
+        conn = pyodbc.connect(conn_str)
+        cur = conn.cursor()
+        cur.execute("""
+            UPDATE Users 
+            SET FirstName = ?, LastName = ?, Email = ?, Gender = ?, DateOfBirth = ?, 
+                MobileNo = ?, Pincode = ?, Address = ?, Country = ?, State = ?
+            WHERE UserID = ?
+        """, (first_name, last_name, email, gender, birth_date, mobile_no, pincode, address, country, state, user_id))
+        
+        # Commit the transaction and close the connection
+        conn.commit()
+        cur.close()
+
+        # Flash a success message and redirect to the user list
+        flash('User updated successfully!', 'success')
+        return redirect(url_for('view_user_profiles'))
+
+    
+
+
+
+
+@app.route('/update_user_profile/<int:user_id>', methods=['POST'])
+def update_user_profile(user_id):
+    if request.method == 'POST':
+        # Capture form data
+        first_name = request.form['firstName']
+        last_name = request.form['lastName']
+        email = request.form['email']
+        gender = request.form['gender']
+        birth_date = request.form['birthDate']
+        mobile_no = request.form['mobileNo']
+        pincode = request.form['pincode']
+        address = request.form['address']
+        country = request.form['country']  # Added country
+        state = request.form['state']      # Added state
+
+        # Debugging print statement
+        print(f"Country: {country}, State: {state}")
+
+        # Connect to the database and update user data
+        conn = pyodbc.connect(conn_str)
+        cur = conn.cursor()
+        cur.execute("""
+            UPDATE Users 
+            SET FirstName = ?, LastName = ?, Email = ?, Gender = ?, DateOfBirth = ?, 
+                MobileNo = ?, Pincode = ?, Address = ?, Country = ?, State = ?
+            WHERE UserID = ?
+        """, (first_name, last_name, email, gender, birth_date, mobile_no, pincode, address, country, state, user_id))
+        
+        # Commit the transaction and close the connection
+        conn.commit()
+        cur.close()
+
+        flash('User updated successfully!', 'success')
+        return redirect(url_for('get_user_profile'))
+
+
+
+
 
 # Run the app
 if __name__ == '__main__':

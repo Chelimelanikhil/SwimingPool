@@ -5,134 +5,132 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Payment Page</title>
     <link rel="stylesheet" href="https://cdn.tailwindcss.com">
- <style>
-    /* styles.css */
+    <style>
+        /* styles.css */
 
-    /* Global styles */
-    body {
-        background-color: #f0f4f8; /* Light gray background */
-        display: flex; /* Use flexbox to center content */
-        justify-content: center; /* Center horizontally */
-        align-items: center; /* Center vertically */
-        height: 100vh; /* Full height of the viewport */
-        margin: 0; /* Remove default margin */
-    }
-    
-    /* Modal styles */
-    .modal {
-        display: none; /* Hidden by default */
-        position: fixed; /* Stay in place */
-        z-index: 1000; /* Sit on top */
-        left: 0;
-        top: 0;
-        width: 100%; /* Full width */
-        height: 100%; /* Full height */
-        overflow: auto; /* Enable scroll if needed */
-        background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
-    }
-    
-    .modal-content {
-        background-color: #ffffff;
-        margin: auto; /* Center horizontally */
-        padding: 30px;
-        border-radius: 10px; /* Rounded corners */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
-        width: 90%; /* Could be more or less, depending on screen size */
-        max-width: 500px; /* Limit the max width */
-    }
-    
-    .close {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
-    
-    .close:hover,
-    .close:focus {
-        color: #000;
-        text-decoration: none;
-        cursor: pointer;
-    }
-    
-    /* Payment card styles */
-    .payment-card {
-        background-color: white;
-        border-radius: 10px; /* Rounded corners */
-        padding: 30px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-        width: 90%; /* Responsive width */
-        max-width: 400px; /* Limit the max width */
-    }
-    
-    /* Amount card styles */
-    .amount-card {
-        background-color: #f0f9ff; /* Light blue background */
-        border: 1px solid #cce4ff; /* Blue border */
-        border-radius: 8px; /* Rounded corners */
-        padding: 15px;
-        text-align: center; /* Centered text */
-    }
-    
-    .amount-text {
-        font-size: 1.5rem; /* Larger font size */
-        font-weight: bold; /* Bold text */
-        color: #1d4ed8; /* Dark blue color */
-    }
-    
-    /* Input field styles */
-    .input-field {
-        border: 1px solid #d1d5db; /* Gray border */
-        padding: 10px; /* Padding */
-        border-radius: 4px; /* Rounded corners */
-        width: 100%; /* Full width */
-        transition: border-color 0.2s; /* Transition effect */
-    }
-    
-    .input-field:focus {
-        border-color: #3b82f6; /* Blue border on focus */
-        outline: none; /* Remove outline */
-    }
-    
-    /* Submit button styles */
-    .submit-button {
-        margin-top:10px;
-        width: 100%; /* Full width */
-        background-color: #3b82f6; /* Blue background */
-        color: white; /* White text */
-        padding: 10px; /* Padding */
-        border-radius: 4px; /* Rounded corners */
-        transition: background-color 0.2s; /* Transition effect */
-        border:none;
-    }
-    
-    .submit-button:hover {
-        background-color: #2563eb; /* Darker blue on hover */
-    }
+        /* Global styles */
+        body {
+            background-color: #f0f4f8; /* Light gray background */
+            display: flex; /* Use flexbox to center content */
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            height: 100vh; /* Full height of the viewport */
+            margin: 0; /* Remove default margin */
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0, 0, 0, 0.5); /* Black w/ opacity */
+        }
+        
+        .modal-content {
+            background-color: #ffffff;
+            margin: auto; /* Center horizontally */
+            padding: 30px;
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+            width: 90%; /* Could be more or less, depending on screen size */
+            max-width: 500px; /* Limit the max width */
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        /* Payment card styles */
+        .payment-card {
+            background-color: white;
+            border-radius: 10px; /* Rounded corners */
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            width: 90%; /* Responsive width */
+            max-width: 400px; /* Limit the max width */
+        }
+        
+        /* Amount card styles */
+        .amount-card {
+            background-color: #f0f9ff; /* Light blue background */
+            border: 1px solid #cce4ff; /* Blue border */
+            border-radius: 8px; /* Rounded corners */
+            padding: 15px;
+            text-align: center; /* Centered text */
+        }
+        
+        .amount-text {
+            font-size: 1.5rem; /* Larger font size */
+            font-weight: bold; /* Bold text */
+            color: #1d4ed8; /* Dark blue color */
+        }
+        
+        /* Input field styles */
+        .input-field {
+            border: 1px solid #d1d5db; /* Gray border */
+            padding: 10px; /* Padding */
+            border-radius: 4px; /* Rounded corners */
+            width: 100%; /* Full width */
+            transition: border-color 0.2s; /* Transition effect */
+        }
+        
+        .input-field:focus {
+            border-color: #3b82f6; /* Blue border on focus */
+            outline: none; /* Remove outline */
+        }
+        
+        /* Submit button styles */
+        .submit-button {
+            margin-top:10px;
+            width: 100%; /* Full width */
+            background-color: #3b82f6; /* Blue background */
+            color: white; /* White text */
+            padding: 10px; /* Padding */
+            border-radius: 4px; /* Rounded corners */
+            transition: background-color 0.2s; /* Transition effect */
+            border:none;
+        }
+        
+        .submit-button:hover {
+            background-color: #2563eb; /* Darker blue on hover */
+        }
 
-    /* Loader styles */
-    .loader {
-        border: 8px solid #f3f3f3;
-        border-radius: 50%;
-        border-top: 8px solid #3498db;
-        width: 60px;
-        height: 60px;
-        animation: spin 1s linear infinite;
-        display: none;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
+        /* Loader styles */
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 8px solid #3498db;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
 
-    @keyframes spin {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
-    
-
- </style>
+    </style>
 </head>
 <body class="bg-gray-200 font-sans h-screen flex items-center justify-center">
     <div class="payment-card">
@@ -144,7 +142,7 @@
             <div class="amount-text">${{ amount }}</div> <!-- Display the amount -->
         </div>
         
-        <form method="POST" action="/process_payment" onsubmit="return showModal(event);" class="space-y-4">
+        <form id="paymentForm" method="POST" action="/process_payment" onsubmit="return validateForm(event);" class="space-y-4">
             <input type="hidden" name="amount" value="{{ amount }}">
             <div>
                 <label for="card_number" class="block text-sm font-medium text-gray-700">Card Number:</label>
@@ -182,53 +180,47 @@
     </div>
 
     <script>
-        // Show the modal on successful payment
-        function showModal(event) {
-            event.preventDefault();  // Prevent the default form submission
-            const form = event.target;  // Get the form element
-            const loader = document.getElementById('loader');  // Display loader
-        
-            // Show the loader while processing
-            loader.style.display = 'block';
-        
-            // Collect the form data
-            const formData = new FormData(form);
-        
-            // Use fetch API to send the form data via POST to the backend route
-            fetch(form.action, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                // Hide the loader after the response is received
-                loader.style.display = 'none';
-        
-                if (response.ok) {
-                    // If successful, show the success modal
-                    document.getElementById('successModal').style.display = 'block';
-                } else {
-                    alert('Error processing payment.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error processing payment.');
-                loader.style.display = 'none';  // Hide loader on error
-            });
-        }
-        
+        // Validate the payment form
+        function validateForm(event) {
+            const cardNumber = document.getElementById('card_number').value.replace(/\s/g, ''); // Remove spaces
+            const cvv = document.getElementById('cvv').value;
+            const cardHolderName = document.getElementById('card_holder_name').value;
+            const expirationDate = document.getElementById('expiration_date').value;
 
-        // Close the modal
+            // Card number validation
+            if (cardNumber.length !== 16 || !/^\d+$/.test(cardNumber)) {
+                alert('Card number must be exactly 16 digits.');
+                return false;
+            }
+
+            // CVV validation
+            if (cvv.length !== 3 || !/^\d+$/.test(cvv)) {
+                alert('CVV must be exactly 3 digits.');
+                return false;
+            }
+
+            // Cardholder name validation
+            if (cardHolderName.trim() === '') {
+                alert('Cardholder name is required.');
+                return false;
+            }
+
+            // Expiration date validation
+            const today = new Date();
+            const selectedDate = new Date(expirationDate + "-01"); // Convert to date object (using the first of the month)
+            if (selectedDate < today) {
+                alert('Expiration date must be a future date.');
+                return false;
+            }
+
+            // Show loader
+            document.getElementById('loader').style.display = 'block';
+
+            return true; // Allow the form to be submitted
+        }
+
         function closeModal() {
             document.getElementById('successModal').style.display = 'none';
-        }
-
-        // Close the modal when clicking outside of it
-        window.onclick = function(event) {
-            const modal = document.getElementById('successModal');
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
         }
     </script>
 </body>

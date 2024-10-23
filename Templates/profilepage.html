@@ -9,11 +9,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/user_dashboard.css') }}" />
 </head>
 <body class="bg-gray-100 font-sans">
-    <header class="header bg-blue-600 text-white shadow-lg py-2">
+    <header class="bg-blue-800 text-white shadow-lg py-4">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-3xl font-bold">Profile</h1>
+            <h1 class="text-4xl font-bold">User Profile</h1>
             <div class="flex space-x-4">
-                <a href="/logout" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">
+                <a href="/logout" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">
                     <i class="fas fa-sign-out-alt mr-2"></i>Logout
                 </a>
             </div>
@@ -21,33 +21,72 @@
     </header>
 
     <div class="container mx-auto px-4 py-8 flex flex-col items-center">
-        <!-- Profile Icon -->
-        <div class="mb-6">
-            <i class="fas fa-user-circle text-6xl text-blue-600"></i>
-        </div>
-
-        <!-- Basic Information -->
-        <div class="bg-white shadow-md rounded-lg p-6 w-full md:w-1/2">
-            <h2 class="text-2xl font-semibold mb-4 text-center">Basic Information</h2>
-            <div class="grid grid-cols-1 gap-4">
-                <div>
-                    <label class="block text-gray-600 font-medium">Name:</label>
-                    <p class="text-gray-800">John Doe</p>
+        <!-- Profile Card -->
+        <div class="bg-white shadow-xl rounded-lg p-8 w-full md:w-3/4 lg:w-1/2">
+            <div class="flex justify-center mb-6">
+                <i class="fas fa-user-circle text-10xl text-blue-600"></i>
+            </div>
+            <h2 class="text-3xl font-semibold mb-4 text-center">Basic Information</h2>
+            <div class="grid grid-cols-1 gap-6">
+                <div class="p-4 border-b border-gray-300">
+                    <label class="block text-gray-700 font-medium">Name:</label>
+                    <p class="text-gray-900 text-xl font-semibold">{{ user['FirstName'] }} {{ user['LastName'] }}</p>
                 </div>
-                <div>
-                    <label class="block text-gray-600 font-medium">Email:</label>
-                    <p class="text-gray-800">john.doe@example.com</p>
+                <div class="p-4 border-b border-gray-300">
+                    <label class="block text-gray-700 font-medium">Email:</label>
+                    <p class="text-gray-900 text-xl font-semibold">{{ user['Email'] }}</p>
                 </div>
-                <div>
-                    <label class="block text-gray-600 font-medium">Phone:</label>
-                    <p class="text-gray-800">+1 (234) 567-8901</p>
+                <div class="p-4 border-b border-gray-300">
+                    <label class="block text-gray-700 font-medium">Phone:</label>
+                    <p class="text-gray-900 text-xl font-semibold">{{ user['MobileNo'] }}</p>
                 </div>
-                <div>
-                    <label class="block text-gray-600 font-medium">Address:</label>
-                    <p class="text-gray-800">123 Main St, City, Country</p>
+                <div class="p-4 border-b border-gray-300">
+                    <label class="block text-gray-700 font-medium">Address:</label>
+                    <p class="text-gray-900 text-xl font-semibold">{{ user['Address'] }}</p>
                 </div>
+                <div class="p-4 border-b border-gray-300">
+                    <label class="block text-gray-700 font-medium">Gender:</label>
+                    <p class="text-gray-900 text-xl font-semibold">{{ user['Gender'] }}</p>
+                </div>
+                <div class="p-4 border-b border-gray-300">
+                    <label class="block text-gray-700 font-medium">Date of Birth:</label>
+                    <p class="text-gray-900 text-xl font-semibold">{{ user['DateOfBirth'] }}</p>
+                </div>
+                <div class="p-4 border-b border-gray-300">
+                    <label class="block text-gray-700 font-medium">Country:</label>
+                    <p class="text-gray-900 text-xl font-semibold">{{ user['Country'] }}</p>
+                </div>
+                <div class="p-4 border-b border-gray-300">
+                    <label class="block text-gray-700 font-medium">State:</label>
+                    <p class="text-gray-900 text-xl font-semibold">{{ user['State'] }}</p>
+                </div>
+              
+            </div>
+            <!-- Edit Button -->
+            <div class="flex justify-center mt-6">
+                <a href={{ url_for('edit_user_profile', user_id=user.id) }} class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded transition duration-300 ease-in-out">
+                    <i class="fas fa-edit mr-2"></i>Edit Profile
+                </a>
             </div>
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="bg-blue-800 text-white py-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2024 Your Company Name. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Tailwind CSS Styling -->
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        .text-10xl {
+            font-size: 8rem;
+            line-height: 1;
+        }
+    </style>
 </body>
 </html>
