@@ -36,8 +36,8 @@
        
         <li>
           <a
-            href="{{ url_for('update_view_schedule') }}"
-            class="{% if request.endpoint == 'update_view_schedule' %}active{% endif %}"
+            href="{{ url_for('time_slots') }}"
+            class="{% if request.endpoint == 'time_slots' %}active{% endif %}"
           >
             <i class="fas fa-calendar-alt mr-2"></i>Update/View Schedule</a
           >
@@ -50,14 +50,7 @@
             <i class="fas fa-users mr-2"></i>View User Profiles</a
           >
         </li>
-        <li>
-          <a
-            href="{{ url_for('view_update_fee_structure') }}"
-            class="{% if request.endpoint == 'view_update_fee_structure' %}active{% endif %}"
-          >
-            <i class="fas fa-dollar-sign mr-2"></i>View/Update Fee Structure</a
-          >
-        </li>
+       
         <li>
           <a
             href="{{ url_for('view_all_user_classes') }}"

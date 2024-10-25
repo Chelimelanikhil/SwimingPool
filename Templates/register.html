@@ -4,9 +4,243 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration Form</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
 </head>
+<style>
+    /* Add your existing CSS styles here or link to your CSS file */
+    :root {
+        --primary-color: #0077be;
+        --secondary-color: #00a8e8;
+        --accent-color: #f9a825;
+        --text-color: #333;
+        --light-bg: #f4f4f4;
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        color: var(--text-color);
+        line-height: 1.6;
+        
+    }
+
+    .container {
+        width: 90%;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    /* Top bar styles */
+    .top-bar {
+        background-color: var(--primary-color);
+        padding: 10px 0;
+        font-size: 14px;
+    }
+
+    .top-bar .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .top-bar a {
+        color: white;
+        text-decoration: none;
+        transition: opacity 0.3s ease;
+    }
+
+    .top-bar img {
+        height: 16px;
+        margin-right: 5px;
+        vertical-align: middle;
+    }
+
+    .right {
+        display: flex;
+        gap: 15px; /* Add gap between items */
+    }
+
+    .right a {
+        text-decoration: none;
+        color: white;
+    }
+
+    .right a:hover {
+        text-decoration: underline;
+    }
+
+    /* Navbar styles */
+    .navbar {
+        background-color: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+
+    .navbar .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 0;
+    }
+
+    .logo {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--primary-color);
+        text-decoration: none;
+    }
+
+    .nav-links {
+        display: flex;
+        align-items: center;
+    }
+
+    .nav-links a {
+        margin: 0 15px;
+        text-decoration: none;
+        color: var(--text-color);
+        font-weight: 600;
+        transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover {
+        color: var(--secondary-color);
+    }
+    .form-container {
+        background-color: white;
+        padding: 20px;
+        padding-left: 40px;
+        border-radius: 8px;
+        padding-right: 50px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 600px;
+    }
+    
+    .form-header {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 24px;
+        font-weight: bold;
+    }
+    
+    .form-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+    
+    .form-group {
+        width: 45%;
+    }
+    
+    .full-width {
+        width: 50%;
+    }
+    
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="date"],
+    input[type="tel"],
+    select,
+    textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        font-size: 16px;
+    }
+    
+    textarea {
+        resize: none;
+    }
+    
+    button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 20px;
+    }
+    
+    button:hover {
+        background-color: #0056b3;
+    }
+    
+    .required {
+        color: red;
+    }
+    
+    
+    
+    .form-cont {
+       
+        margin-top: 80px;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</style>
 <body>
+    <div class="top-bar">
+        <div class="container">
+            <div class="left">
+                <img src="https://cdn4.iconfinder.com/data/icons/social-media-logos-6/512/112-gmail_email_mail-512.png" alt="Email Icon">
+                <a href="mailto:info.poolmanagement@gmail.com">info.poolmanagement@gmail.com</a>
+            </div>
+            <div class="right">
+                <a href="#">Calendar</a>
+                <a href="https://www.google.com/maps?q=620+North+Way,+Austin,+Tx,+78717" target="_blank">View Address</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="logo">
+                <img src="https://www.shutterstock.com/image-vector/simple-swimming-icon-person-logo-260nw-2453189341.jpg" alt="Logo" style="height: 50px;">
+                Smart Pool
+            </a>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}">Home</a>
+               
+            </div>
+        </div>
+    </nav>
+
+   <div class="form-cont">
     <div class="form-container">
         <h2 class="form-header">Registration Form</h2>
         <form action="{{ url_for('register') }}" method="POST">
@@ -81,5 +315,6 @@
             <button type="submit">Submit</button>
         </form>
     </div>
+   </div>
 </body>
 </html>

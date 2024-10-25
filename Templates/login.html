@@ -1,10 +1,297 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+   
+    <style>
+        /* Add your existing CSS styles here or link to your CSS file */
+        :root {
+            --primary-color: #0077be;
+            --secondary-color: #00a8e8;
+            --accent-color: #f9a825;
+            --text-color: #333;
+            --light-bg: #f4f4f4;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            color: var(--text-color);
+            line-height: 1.6;
+            
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Top bar styles */
+        .top-bar {
+            background-color: var(--primary-color);
+            padding: 10px 0;
+            font-size: 14px;
+        }
+
+        .top-bar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-bar a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .top-bar img {
+            height: 16px;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+
+        .right {
+            display: flex;
+            gap: 15px; /* Add gap between items */
+        }
+
+        .right a {
+            text-decoration: none;
+            color: white;
+        }
+
+        .right a:hover {
+            text-decoration: underline;
+        }
+
+        /* Navbar styles */
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Form container styles */
+        .form-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-container input[type="email"],
+        .form-container input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-container input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form-container input[type="submit"]:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .flash-message {
+            color: red;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .form-container {
+          
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+           
+        }
+        h2 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        
+        /* Styling input fields */
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="number"],
+        input[type="tel"],
+        textarea,
+        select {
+            width: calc(100% - 22px); /* Adjusted width for better fit */
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        
+        /* Styling for date input */
+        input[type="date"] {
+            width: calc(100% - 22px); /* Adjusted width for better fit */
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+            background-color: #ffffff; /* White background for better visibility */
+        }
+        
+        /* Input fields displayed in a compact row */
+        .compact-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            align-items: flex-start; /* Align items at the top */
+        }
+        
+        .compact-row input {
+            width: calc(48% - 10px); /* Adjusted the width of each input field */
+        }
+        
+        /* Styling for text area (Address) */
+        textarea {
+            resize: none;
+            height: 80px;
+        }
+        
+        input[type="number"] {
+            margin-left: 10px;
+        }
+        
+        input[type="tel"] {
+            margin-right: 10px;
+        }
+        
+        /* Submit button styling */
+        input[type="submit"] {
+            width: 95%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        /* Submit button hover effect */
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        
+        /* Flash message styling */
+        .flash-message {
+            color: red;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        /* Link to Register/Login */
+        a {
+            color: #00796b;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Add margin for the paragraph */
+        p {
+            margin-top: 10px;
+            color: #555;
+        }
+        
+    </style>
 </head>
 <body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="left">
+                <img src="https://cdn4.iconfinder.com/data/icons/social-media-logos-6/512/112-gmail_email_mail-512.png" alt="Email Icon">
+                <a href="mailto:info.poolmanagement@gmail.com">info.poolmanagement@gmail.com</a>
+            </div>
+            <div class="right">
+                <a href="{{ url_for('calender') }}">Calendar</a>
+                <a href="https://www.google.com/maps?q=620+North+Way,+Austin,+Tx,+78717" target="_blank">View Address</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="logo">
+                <img src="https://www.shutterstock.com/image-vector/simple-swimming-icon-person-logo-260nw-2453189341.jpg" alt="Logo" style="height: 50px;">
+                Smart Pool
+            </a>
+            <div class="nav-links">
+                <a href="{{ url_for('home') }}">Home</a>
+               
+            </div>
+        </div>
+    </nav>
+
     <div class="form-container">
         <h2>Login</h2>
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -13,7 +300,7 @@
                 <div class="flash-message">{{ message }}</div>
             {% endfor %}
         {% endif %}
-    {% endwith %}
+        {% endwith %}
 
         <form method="POST">
             <!-- Username -->

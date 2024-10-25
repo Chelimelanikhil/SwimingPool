@@ -7,9 +7,96 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/user_dashboard.css') }}" />
- 
+    <style>
+        :root {
+            --primary-color: #0077be; /* Bright blue */
+            --secondary-color: #00a8e8; /* Sky blue */
+            --accent-color: #f9a825; /* Amber */
+            --text-color: #333; /* Dark text */
+            --light-bg: #f4f4f4; /* Light background */
+            --card-bg: #ffffff; /* White background for cards */
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            color: var(--text-color);
+            line-height: 1.6;
+            background: var(--light-bg);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .program-section {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .program-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .program-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--accent-color);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .program-options, .program-schedule {
+            margin-bottom: 20px;
+        }
+
+        .register-button {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s, transform 0.3s;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .register-button:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        .icon {
+            color: var(--accent-color);
+            margin-right: 10px;
+        }
+
+        .program-options ul {
+            padding-left: 20px;
+            margin: 10px 0;
+        }
+
+        h3.font-semibold {
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans">
+<body>
     <div class="top-bar">
         <div class="container">
             <div class="left">
@@ -17,38 +104,37 @@
                 <a href="mailto:info.poolmanagement@gmail.com">info.poolmanagement@gmail.com</a>
             </div>
             <div class="right">
-                <a href="#">Calendar</a>
-                <a href="#">View Address</a>
+                <a href="{{ url_for('calender') }}" class="text-blue-600">Calendar</a>
+                <a href="https://www.google.com/maps?q=620+North+Way,+Austin,+Tx,+78717" target="_blank" class="text-blue-600">View Address</a>
             </div>
         </div>
     </div>
-    <header class="header bg-blue-600 text-white shadow-lg py-2">
+    <header class="header bg-blue-600 text-white shadow-lg py-1">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-3xl font-bold">Welcome, {{ session['username'] }}!</h1>
+            <div class="flex items-center"> 
+                <img src="https://www.shutterstock.com/image-vector/simple-swimming-icon-person-logo-260nw-2453189341.jpg" 
+                     alt="Logo" 
+                     class="h-12 w-12 rounded-full mr-2" style="margin-top:2px">
+                <h1 class="text-3xl font-bold">Welcome, {{ session['username'] }}!</h1>
+            </div>
             <div class="flex space-x-4">
-                
                 <a class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out" href="/registerclass">
                     <i class="fas fa-user-plus mr-2"></i>Register Class
                 </a>
-                <a class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out" href="/logout">
-                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                </a>
-               
-                <div class="group relative bg-aqua-500  text-white font-bold py-2 px-4 ml-4 rounded transition duration-300 ease-in-out">
+                <div class="group relative bg-aqua-500 text-white font-bold py-2 px-4 ml-4 rounded transition duration-300 ease-in-out">
                     <a href="#" class="text-white text-xl">
                         <i class="fas fa-user"></i>
                     </a>
                     <div class="absolute hidden group-hover:block bg-white text-black rounded shadow-lg mt-2">
                         <a href="/profile" class="block px-4 py-2 hover:bg-gray-200">Profile</a>
                         <a href="/registered_classes" class="block px-4 py-2 hover:bg-gray-200">Registered Classes</a>
+                        <a href="/logout" class="block px-4 py-2 hover:bg-gray-200">Logout </a>
                     </div>
                 </div>
             </div>
         </div>
     </header>
-    
-
-      <div class="container mx-auto px-4 py-8">
+    <div class="container mx-auto px-4 py-8">
         <!-- About Section -->
         <section id="about" class="mb-12">
             <h2 class="text-2xl font-semibold mb-4">About Us</h2>
@@ -58,39 +144,84 @@
             </p>
         </section>
 
-        <!-- Services Section -->
-        <section id="services" class="mb-12">
-            <h2 class="text-2xl font-semibold mb-4">Our Services</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="service-item p-6 bg-white shadow-md rounded-lg">
-                    <h3 class="text-xl font-semibold mb-2">Pool Maintenance</h3>
-                    <p class="text-gray-700">
-                        Regular maintenance to ensure your pool is in the best condition, including cleaning, chemical balancing, and inspections.
-                    </p>
-                </div>
-                <div class="service-item p-6 bg-white shadow-md rounded-lg">
-                    <h3 class="text-xl font-semibold mb-2">Emergency Repairs</h3>
-                    <p class="text-gray-700">
-                        Quick and reliable repair services to handle any emergency issues with your pool systems.
-                    </p>
-                </div>
-                <div class="service-item p-6 bg-white shadow-md rounded-lg">
-                    <h3 class="text-xl font-semibold mb-2">Pool Renovation</h3>
-                    <p class="text-gray-700">
-                        We provide pool renovation services to give your pool a fresh new look or to update its infrastructure.
-                    </p>
-                </div>
+        <!-- Children's Swimming Program -->
+        <section id="children" class="program-section">
+            <h2 class="program-title">Children's Swimming Program</h2>
+            <p>Welcome to our children's swimming program! We believe every child should learn to swim in a safe, fun, and nurturing environment.</p>
+            <div class="program-options">
+                <h3 class="font-semibold">Class Options</h3>
+                <ul class="list-disc list-inside">
+                    <li><strong><i class="fas fa-users icon"></i>Group Lessons (3 children max)</strong>
+                        <ul class="list-disc list-inside">
+                            <li>Perfect for beginners to intermediate swimmers.</li>
+                            <li>Peer interaction promotes learning and confidence.</li>
+                            <li>Focused attention with small group size.</li>
+                        </ul>
+                    </li>
+                    <li><strong><i class="fas fa-user icon"></i>Private Lessons</strong>
+                        <ul class="list-disc list-inside">
+                            <li>One-on-one instruction.</li>
+                            <li>Personalized learning pace.</li>
+                            <li>Ideal for all skill levels.</li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
+            <div class="program-schedule">
+                <h3 class="font-semibold">Class Schedule</h3>
+                <p>60-minute sessions:</p>
+                <ul class="list-disc list-inside">
+                    <li>Private Sessions: Everyday - Morning 8:00 AM - 9:00 AM</li>
+                    <li>Group Sessions: Everyday - Evening 4:00 PM - 5:00 PM</li>
+                </ul>
+            </div>
+            <a href="registerclass" class="register-button">Register for Class</a>
         </section>
 
-        <!-- Contact Section -->
-        <section id="contact" class="mb-12">
+        <!-- Adult Swimming Program -->
+        <section id="adult" class="program-section">
+            <h2 class="program-title">Adult Swimming Program</h2>
+            <p>Whether you're learning to swim for the first time or improving your technique, our adult programs fulfill all skill levels.</p>
+            <div class="program-options">
+                <h3 class="font-semibold">Class Options</h3>
+                <ul class="list-disc list-inside">
+                    <li><strong><i class="fas fa-users icon"></i>Group Lessons (3 adults max)</strong>
+                        <ul class="list-disc list-inside">
+                            <li>Supportive learning environment.</li>
+                            <li>Cost-effective option.</li>
+                            <li>Structured progression.</li>
+                        </ul>
+                    </li>
+                    <li><strong><i class="fas fa-user icon"></i>Private Lessons</strong>
+                        <ul class="list-disc list-inside">
+                            <li>Customized instruction.</li>
+                            <li>Flexible scheduling.</li>
+                            <li>Focused skill development.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="program-schedule">
+                <h3 class="font-semibold">Class Schedule</h3>
+                <p>90-minute sessions:</p>
+                <ul class="list-disc list-inside">
+                    <li>Group Sessions: Tuesday & Thursday - Evening 6:00 PM - 7:30 PM</li>
+                    <li>Private Sessions: Monday to Friday - Flexible timing</li>
+                </ul>
+            </div>
+            <a href="registerclass" class="register-button">Register for Class</a>
+        </section>
+
+        <section id="contact" class="mt-12">
             <h2 class="text-2xl font-semibold mb-4">Contact Us</h2>
-            <p class="text-gray-700 mb-4">Feel free to reach out to us for any inquiries or assistance.</p>
-            <a href="mailto:info.poolmanagement@gmail.com" class="text-blue-600 hover:underline">
-                <i class="fas fa-envelope mr-2"></i>info.poolmanagement@gmail.com
-            </a>
+            <p class="text-gray-700 leading-relaxed">
+                If you have any questions or need further information, feel free to contact us at <a href="mailto:info.poolmanagement@gmail.com" class="text-blue-600">info.poolmanagement@gmail.com</a>.
+            </p>
         </section>
     </div>
-</body> 
+
+    <footer class="bg-gray-800 text-white text-center py-4">
+        <p>&copy; 2024 Pool Management. All Rights Reserved.</p>
+    </footer>
+</body>
 </html>

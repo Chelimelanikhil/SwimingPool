@@ -6,6 +6,19 @@
     <title>Smart Pool Management</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}" />
+    <script>
+        function scrollToSection(sectionId) {
+            var element = document.getElementById(sectionId);
+            var offset = 80; // Adjust this value based on the height of your navbar
+            var elementPosition = element.getBoundingClientRect().top;
+            var offsetPosition = elementPosition + window.pageYOffset - offset;
+    
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: "smooth"
+            });
+        }
+    </script>
 </head>
 <body>
     
@@ -16,22 +29,25 @@
                 <a href="mailto:info.poolmanagement@gmail.com">info.poolmanagement@gmail.com</a>
             </div>
             <div class="right">
-                <a href="#">Calendar</a>
-                <a href="#">View Address</a>
+                <a href="{{ url_for('calender') }}">Calendar</a>
+                <a href="https://www.google.com/maps?q=620+North+Way,+Austin,+Tx,+78717" target="_blank">View Address</a>
+
             </div>
         </div>
     </div>
 
-
     <nav class="navbar">
-        <div class="container">
-            <a href="#" class="logo">Smart Pool</a>
-            <div class="nav-links">
+        <div class="container flex items-center"> <!-- Added flex and items-center -->
+            <a href="#" class="logo flex items-center"> <!-- Added flex and items-center for logo -->
+                <img src="https://www.shutterstock.com/image-vector/simple-swimming-icon-person-logo-260nw-2453189341.jpg" alt="Logo" style="height: 50px;">
+                <span class="text-lg font-bold">Smart Pool</span> <!-- Wrapped text in a span for styling -->
+            </a>
+            <div class="nav-links ml-auto"> <!-- Added ml-auto to push nav links to the right -->
                 <div class="dropdown">
                     <a href="#">Swim Lessons</a>
                     <div class="dropdown-content">
-                        <a id="childClassesLink" href="">Child</a>
-                        <a id="adultClassesLink" href="#">Adult</a>
+                        <a href="javascript:void(0);" onclick="scrollToSection('childrenSection')">Children</a>
+                        <a href="javascript:void(0);" onclick="scrollToSection('adultSection')">Adult</a>
                     </div>
                 </div>
                 <a href="{{ url_for('login') }}">Login</a>
@@ -39,25 +55,33 @@
             </div>
         </div>
     </nav>
-
- 
+    
     <div class="hero">
         <div class="hero-content">
             <h1>New Austin Location</h1>
             <p>Experience the future of aquatics at our state-of-the-art facility</p>
-            <a href="#" class="cta-button">Pre-register Now</a>
+            <a href="{{ url_for('register') }}" class="cta-button">Pre-register Now</a>
         </div>
     </div>
 
-    <!-- Class Listings Section -->
-   
+    <!-- Section for Children Swimming -->
+    <div id="childrenSection" style="padding: 40px; background-color: #f5f5f5;">
+        <h2>Children Swimming</h2>
+<p>Swimming lessons are critical for keeping children safe and helping them thrive. These classes teach them important water safety techniques that can help them avoid accidents and build their confidence in and around water. Swimming also aids their physical development by boosting coordination, strength, and flexibility while exerting little load on their bodies. Swimming lessons additionally help kids learn important life lessons such as discipline, setting targets, and teamwork.  Regular swimming may help young people focus better in class, sleep better, and focus all of their energy in a healthier manner. It's an excellent opportunity for children to interact with new people and pick up a talent that will lead to a number of other sports and interests as they get older. </p>
+       <a href="{{ url_for('login') }}" class="cta-button">Register for swim class</a>
+    </div>
+
+    <!-- Section for Adult Swimming -->
+    <div id="adultSection" style="padding: 40px; background-color: #e0e0e0;">
+        <h2>Adult Swimming</h2>
+        <p>Adult swimming classes offer a complete package of physical and mental benefits. The low-impact nature of swimming makes it perfect for overall fitness, helping with muscle strength and heart health without straining your joints. These classes build water confidence and safety skills in a supportive environment, making activities like beach trips and pool time with family are more enjoyable. Beyond the physical aspects, swimming serves as an excellent stress reliever and social activity, where you can meet new people while mastering a potentially life-saving skill that stays with you forever. </p>
+        <a href="{{ url_for('login') }}" class="cta-button">Register for swim class</a>
+    </div>
 
     <!-- Footer -->
     <div class="footer">
         <p>© 2024 Smart Pool Management. All rights reserved.</p>
     </div>
 
-   
-   
 </body>
-</html> 
+</html>

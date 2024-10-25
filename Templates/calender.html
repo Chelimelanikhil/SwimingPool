@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Calendar with Navigation</title>
+    <style>
+     
+        
+
+
+
+
+
+:root {
+    --primary-color: #0077be;
+    --secondary-color: #00a8e8;
+    --accent-color: #f9a825;
+    --text-color: #333;
+    --light-bg: #f4f4f4;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Top bar styles */
+.top-bar {
+    background-color: var(--primary-color);
+    padding: 10px 0;
+    font-size: 14px;
+}
+
+.top-bar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.top-bar a {
+    color: white;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+}
+
+
+
+.top-bar img {
+    height: 16px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+.right {
+    display: flex;
+    gap: 15px; /* Add gap between items */
+}
+
+.right a {
+    text-decoration: none;
+    color: white;
+}
+.right a:hover {
+    text-decoration: underline;
+}
+
+
+/* Navbar styles */
+.navbar {
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+}
+
+.nav-links a {
+    margin: 0 15px;
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--secondary-color);
+}
+
+
+        /* Calendar Styles */
+        .calendar-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            margin-bottom:20px
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .day {
+            padding: 15px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            transition: background-color 0.3s ease;
+        }
+
+        .day:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .day-header {
+            font-weight: bold;
+            background-color: #eee;
+            padding: 10px;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .month-title {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap:40px
+        }
+
+        .navigation button {
+            padding: 5px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            height:50px;
+            margin-top:15px;
+        }
+
+        .navigation button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Footer Nav Bar */
+        .nav-bar {
+            background-color: #007bff;
+            color: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .nav-bar a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .nav-bar a:hover {
+            text-decoration: underline;
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="left">
+                <img src="https://cdn4.iconfinder.com/data/icons/social-media-logos-6/512/112-gmail_email_mail-512.png" alt="Email Icon">
+                <a href="mailto:info.poolmanagement@gmail.com">info.poolmanagement@gmail.com</a>
+            </div>
+            <div class="right">
+                <a href="#">Calendar</a>
+                <a href="https://www.google.com/maps?q=620+North+Way,+Austin,+Tx,+78717" target="_blank">View Address</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="#" class="logo">
+                <img src="https://www.shutterstock.com/image-vector/simple-swimming-icon-person-logo-260nw-2453189341.jpg" alt="Logo" style="height: 50px;">
+                Smart Pool
+            </a>
+            <div class="nav-links">
+                
+                <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('register') }}">Register</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Calendar Container -->
+    <div class="calendar-container">
+        <div class="navigation">
+            <button id="prevMonth">Previous</button>
+            <h2 class="month-title" id="monthTitle"></h2>
+            <button id="nextMonth">Next</button>
+        </div>
+        <div class="calendar" id="calendar"></div>
+    </div>
+
+   
+
+    <script>
+        const calendar = document.getElementById('calendar');
+        const monthTitle = document.getElementById('monthTitle');
+        const prevMonthBtn = document.getElementById('prevMonth');
+        const nextMonthBtn = document.getElementById('nextMonth');
+
+        const monthNames = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
+
+        function createCalendar(month, year) {
+            calendar.innerHTML = "";
+            monthTitle.textContent = `${monthNames[month]} ${year}`;
+
+            dayNames.forEach(dayName => {
+                const dayHeader = document.createElement('div');
+                dayHeader.classList.add('day-header');
+                dayHeader.textContent = dayName;
+                calendar.appendChild(dayHeader);
+            });
+
+            const firstDay = new Date(year, month).getDay();
+            const totalDays = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 0; i < firstDay; i++) {
+                const blank = document.createElement('div');
+                calendar.appendChild(blank);
+            }
+
+            for (let day = 1; day <= totalDays; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.classList.add('day');
+                dayElement.textContent = day;
+
+                calendar.appendChild(dayElement);
+            }
+        }
+
+        prevMonthBtn.addEventListener('click', () => {
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            createCalendar(currentMonth, currentYear);
+        });
+
+        nextMonthBtn.addEventListener('click', () => {
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            createCalendar(currentMonth, currentYear);
+        });
+
+        createCalendar(currentMonth, currentYear);
+    </script>
+</body>
+</html>

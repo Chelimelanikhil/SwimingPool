@@ -556,7 +556,7 @@ def get_swim_schedule():
 
 @app.route('/registered_classes')
 def registered_classes():
-    user_id = session.get('id')  # Assuming you're storing the user ID in the session after login
+    user_id = session.get('id')  
     if not user_id:
         flash('Please log in to view your registered classes.', 'warning')
         return redirect(url_for('login'))
@@ -595,6 +595,37 @@ def registered_classes():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
+@app.route('/get_fee', methods=['POST'])
+def get_fee():
+    data = request.get_json()
+    register_for = data.get('register_for')
+    class_type = data.get('class_type')
+    
+    try:
+        conn = pyodbc.connect(conn_str)
+        cur = conn.cursor()
+        
+        query = """
+            SELECT Fee
+            FROM TimeSlots
+            WHERE RegisteredFor = ? AND ClassType = ?
+        """
+        cur.execute(query, (register_for, class_type))
+        fee_row = cur.fetchone()
+        
+        cur.close()
+        conn.close()
+        
+        if fee_row:
+            fee_per_day = int(fee_row[0])
+            return jsonify({'feePerDay': fee_per_day})
+        else:
+            return jsonify({'feePerDay': 0})  # Default case
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+
 
     
 @app.route('/view_all_user_classes', methods=['GET'])
@@ -654,7 +685,32 @@ def respond_enquiry():
 def update_view_schedule():
     return render_template('update_view_schedule.html')
 
+# @app.route('/add_time_slot', methods=['GET', 'POST'])
+# def add_time_slot():
+#     if request.method == 'POST':
+#         # Capture form data
+#         time_slot = request.form['timeSlot']
+#         fee = request.form['fee']
 
+#         # Insert data into the TimeSlots table
+#         conn = pyodbc.connect(conn_str)
+#         cur = conn.cursor()
+        
+#         cur.execute("""
+#             INSERT INTO TimeSlots (TimeSlot, Fee)
+#             VALUES (?, ?)
+#         """, (time_slot, fee))
+        
+#         # Commit transaction and close connection
+#         conn.commit()
+#         cur.close()
+
+#         # Flash success message and redirect
+#         flash('Time slot added successfully!', 'success')
+#         return redirect(url_for('update_view_schedule'))
+    
+#     # Render the form
+#     return render_template('update_view_schedule.html')
 
 @app.route('/view_update_fee_structure')
 def view_update_fee_structure():
@@ -834,6 +890,181 @@ def update_user_profile(user_id):
 
 
 
+@app.route('/api/getTimeSlots', methods=['GET'])
+def get_time_slots():
+    # Connect to the database
+    conn = pyodbc.connect(conn_str)
+    cur = conn.cursor()
+
+    # Query to fetch the time slots
+    cur.execute("SELECT TimeSlot, ClassType, Fee, RegisteredFor FROM TimeSlots")
+    time_slots = cur.fetchall()
+
+    # Convert the fetched data to a list of dictionaries
+    time_slots_list = [
+        {
+            "TimeSlot": row.TimeSlot,
+            "ClassType": row.ClassType,
+            "Fee": row.Fee,
+            "RegisteredFor": row.RegisteredFor
+        }
+        for row in time_slots
+    ]
+
+    # Close the connection
+    cur.close()
+    conn.close()
+
+    return jsonify(time_slots_list)
+
+
+
+@app.route('/time_slots', methods=['GET'])
+def time_slots():
+    try:
+        # Fetch all time slots from the database
+        conn = pyodbc.connect(conn_str)
+        cur = conn.cursor()
+        
+        query = "SELECT * FROM TimeSlots"
+        cur.execute(query)
+        slots = cur.fetchall()
+        
+        cur.close()
+        conn.close()
+        
+        return render_template('update_view_schedule.html', time_slots=slots)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/edit_time_slot/<int:slot_id>', methods=['GET', 'POST'])
+def edit_time_slot(slot_id):
+    conn = pyodbc.connect(conn_str)
+    cur = conn.cursor()
+
+    if request.method == 'POST':
+        time_slot = request.form['timeSlot']
+        fee = request.form['fee']
+        class_type = request.form['classType']
+        registered_for = request.form['registeredFor']
+
+        # Update SQL command
+        sql = """
+        UPDATE TimeSlots
+        SET TimeSlot = ?, Fee = ?, ClassType = ?, RegisteredFor = ?
+        WHERE TimeSlotID = ?
+        """
+        try:
+            cur.execute(sql, (time_slot, fee, class_type, registered_for, slot_id))
+            conn.commit()
+        except pyodbc.Error as e:
+            print(f"Error during update: {e}")
+            return "An error occurred while updating the time slot.", 500
+
+        return redirect(url_for('time_slots'))  # Redirect to the time slots page after updating
+
+    # Fetch current values for the time slot to be edited
+    sql = "SELECT TimeSlotID, TimeSlot, Fee, ClassType, RegisteredFor FROM TimeSlots WHERE TimeSlotID = ?"
+    try:
+        cur.execute(sql, (slot_id,))
+        slot = cur.fetchone()
+    except pyodbc.Error as e:
+        print(f"Error during fetch: {e}")
+        return "An error occurred while retrieving the time slot.", 500
+
+    cur.close()
+    conn.close()
+
+    if slot:
+        return render_template('edit_time_slot.html', slot=slot)
+    else:
+        return "Time Slot not found", 404  # Handle case where the time slot does not exist
+
+
+
+@app.route('/delete_time_slot/<int:slot_id>', methods=['POST'])
+def delete_time_slot(slot_id):
+    # Establish a connection to the MS Access database
+    conn = pyodbc.connect(conn_str)
+    cur = conn.cursor()
+    
+    try:
+        # SQL command to delete the time slot with the given ID
+        sql = "DELETE FROM TimeSlots WHERE TimeSlotID = ?"
+        cur.execute(sql, (slot_id,))
+        
+        # Commit the transaction
+        conn.commit()
+    except Exception as e:
+        # Handle any exceptions (optional)
+        print(f"An error occurred: {e}")
+    finally:
+        # Close the cursor and connection
+        cur.close()
+        conn.close()
+
+    # Redirect to the time slots page after deletion
+    return redirect(url_for('time_slots'))
+
+
+
+@app.route('/add_time_slot', methods=['GET', 'POST'])
+def add_time_slot():
+    if request.method == 'POST':
+        # Logic to handle form submission and add new time slot to the database
+        pass
+    
+    return render_template('add_time_slot.html')  # Create this HTML file for the form
+
+
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.DEBUG)
+
+@app.route('/add_new_time_slot', methods=['GET', 'POST'])
+def add_new_time_slot():
+    logging.debug(f"Request method: {request.method}")
+    
+    if request.method == 'POST':
+        time_slot = request.form['timeSlot']
+        fee = request.form['fee']
+        class_type = request.form['classType']
+        registered_for = request.form['registeredFor']
+
+        logging.debug(f"Inserting Time Slot: {time_slot}, Fee: {fee}, ClassType: {class_type}, RegisteredFor: {registered_for}")
+
+        # Connect to the MS Access database
+        conn = pyodbc.connect(conn_str)
+        cursor = conn.cursor()
+        
+        try:
+            # SQL query to insert a new time slot
+            insert_query = """
+            INSERT INTO TimeSlots (TimeSlot, Fee, ClassType, RegisteredFor)
+            VALUES (?, ?, ?, ?)
+            """
+            cursor.execute(insert_query, (time_slot, fee, class_type, registered_for))
+            conn.commit()  # Commit the transaction
+            
+            logging.debug("Insert successful!")  # Confirm successful insert
+        except Exception as e:
+            logging.error(f"Error occurred: {e}")  # Log the error message
+        finally:
+            cursor.close()  # Close the cursor
+            conn.close()    # Close the connection
+
+        return redirect(url_for('time_slots'))  # Redirect to the page where time slots are listed
+
+    return render_template('add_time_slot.html')  # Render the form for GET requests
+
+
+
+
+@app.route('/calender')
+def calender():
+    return render_template('calender.html')
 
 
 # Run the app

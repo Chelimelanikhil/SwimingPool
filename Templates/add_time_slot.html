@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-6 py-8">
+    <h2 class="text-gray-800 text-3xl font-semibold mb-6">Add New Time Slot</h2>
+    <form action="{{ url_for('add_new_time_slot') }}" method="POST">
+        <label for="timeSlot" class="block text-gray-700">Time Slot (e.g., "09:00 AM - 10:00 AM"):</label>
+        <input type="text" id="timeSlot" name="timeSlot" required class="border rounded p-2 w-full">
+        <br><br>
+        
+        <label for="fee" class="block text-gray-700">Fee:</label>
+        <input type="number" id="fee" name="fee" step="0.01" required class="border rounded p-2 w-full">
+        <br><br>
+
+        <label for="classType" class="block text-gray-700">Class Type:</label>
+        <select id="classType" name="classType" required class="border rounded p-2 w-full">
+            <option value="">Select Class Type</option>
+            <option value="private">private</option>
+            <option value="group">group</option>
+            
+           
+        </select>
+        <br><br>
+
+        <label for="registeredFor" class="block text-gray-700">Registered For:</label>
+        <select id="registeredFor" name="registeredFor" required class="border rounded p-2 w-full">
+            <option value="">Select Registered For</option>
+            <option value="children">children</option>
+            <option value="adult">adult</option>
+          
+        </select>
+        <br><br>
+
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Add Time Slot</button>
+    </form>
+</div>
+{% endblock %}
